@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<matrix-build>
+  <actions>
+    <hudson.model.ParametersAction>
+      <parameters>
+        <hudson.model.StringParameterValue>
+          <name>uuid</name>
+          <value>hgf_2_1331199885491</value>
+        </hudson.model.StringParameterValue>
+      </parameters>
+    </hudson.model.ParametersAction>
+    <hudson.model.CauseAction>
+      <causes>
+        <hudson.model.Cause_-UserCause>
+          <authenticationName>anonymous</authenticationName>
+        </hudson.model.Cause_-UserCause>
+      </causes>
+    </hudson.model.CauseAction>
+    <CustomMatrix.CustomMatrixAction/>
+  </actions>
+  <number>3</number>
+  <result>SUCCESS</result>
+  <duration>1047</duration>
+  <charset>UTF-8</charset>
+  <keepLog>false</keepLog>
+  <builtOn></builtOn>
+  <workspace>/home/jrusnack/workspace/CustomMatrix/work/jobs/hgf/workspace</workspace>
+  <hudsonVersion>1.399</hudsonVersion>
+  <scm class="hudson.scm.NullChangeLogParser"/>
+  <culprits/>
+  <axes>
+    <hudson.matrix.TextAxis>
+      <name>asd</name>
+      <values>
+        <string>a</string>
+        <string>b</string>
+      </values>
+    </hudson.matrix.TextAxis>
+    <hudson.matrix.TextAxis>
+      <name>fgh</name>
+      <values>
+        <string>c</string>
+        <string>d</string>
+      </values>
+    </hudson.matrix.TextAxis>
+  </axes>
+</matrix-build>

@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<matrix-run>
+  <actions>
+    <hudson.model.ParametersAction>
+      <parameters>
+        <hudson.model.StringParameterValue>
+          <name>uuid</name>
+          <value>a,c_1331218620420</value>
+        </hudson.model.StringParameterValue>
+      </parameters>
+    </hudson.model.ParametersAction>
+    <hudson.model.CauseAction>
+      <causes>
+        <hudson.model.Cause_-UserCause>
+          <authenticationName>anonymous</authenticationName>
+        </hudson.model.Cause_-UserCause>
+      </causes>
+    </hudson.model.CauseAction>
+    <CustomMatrix.CustomMatrixAction>
+      <checked>asd=a,fgh=c</checked>
+    </CustomMatrix.CustomMatrixAction>
+  </actions>
+  <number>19</number>
+  <result>SUCCESS</result>
+  <duration>242</duration>
+  <charset>UTF-8</charset>
+  <keepLog>false</keepLog>
+  <builtOn></builtOn>
+  <workspace>/home/jrusnack/workspace/CustomMatrix/work/jobs/hgf/workspace/asd/a/fgh/c</workspace>
+  <hudsonVersion>1.399</hudsonVersion>
+  <scm class="hudson.scm.NullChangeLogParser"/>
+  <culprits/>
+</matrix-run>

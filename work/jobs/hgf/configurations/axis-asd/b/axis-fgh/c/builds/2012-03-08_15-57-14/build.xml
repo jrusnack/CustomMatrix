@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<matrix-run>
+  <actions>
+    <hudson.model.ParametersAction>
+      <parameters>
+        <hudson.model.StringParameterValue>
+          <name>uuid</name>
+          <value>hgf_1331218634340</value>
+        </hudson.model.StringParameterValue>
+      </parameters>
+    </hudson.model.ParametersAction>
+    <hudson.model.CauseAction>
+      <causes>
+        <hudson.model.Cause_-UpstreamCause>
+          <upstreamProject>hgf</upstreamProject>
+          <upstreamUrl>job/hgf/</upstreamUrl>
+          <upstreamBuild>20</upstreamBuild>
+          <upstreamCauses>
+            <hudson.model.Cause_-UserCause>
+              <authenticationName>anonymous</authenticationName>
+            </hudson.model.Cause_-UserCause>
+          </upstreamCauses>
+        </hudson.model.Cause_-UpstreamCause>
+      </causes>
+    </hudson.model.CauseAction>
+    <CustomMatrix.CustomMatrixAction>
+      <checked>asd=b,fgh=c</checked>
+    </CustomMatrix.CustomMatrixAction>
+  </actions>
+  <number>20</number>
+  <result>SUCCESS</result>
+  <duration>65</duration>
+  <charset>UTF-8</charset>
+  <keepLog>false</keepLog>
+  <builtOn></builtOn>
+  <workspace>/home/jrusnack/workspace/CustomMatrix/work/jobs/hgf/workspace/asd/b/fgh/c</workspace>
+  <hudsonVersion>1.399</hudsonVersion>
+  <scm class="hudson.scm.NullChangeLogParser"/>
+  <culprits/>
+</matrix-run>

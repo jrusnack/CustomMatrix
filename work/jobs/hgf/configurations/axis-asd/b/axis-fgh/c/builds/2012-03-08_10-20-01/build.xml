@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<matrix-run>
+  <actions>
+    <hudson.model.CauseAction>
+      <causes>
+        <hudson.model.Cause_-UpstreamCause>
+          <upstreamProject>hgf</upstreamProject>
+          <upstreamUrl>job/hgf/</upstreamUrl>
+          <upstreamBuild>1</upstreamBuild>
+          <upstreamCauses>
+            <hudson.model.Cause_-UserCause>
+              <authenticationName>anonymous</authenticationName>
+            </hudson.model.Cause_-UserCause>
+          </upstreamCauses>
+        </hudson.model.Cause_-UpstreamCause>
+      </causes>
+    </hudson.model.CauseAction>
+  </actions>
+  <number>1</number>
+  <result>SUCCESS</result>
+  <duration>168</duration>
+  <charset>UTF-8</charset>
+  <keepLog>false</keepLog>
+  <builtOn></builtOn>
+  <workspace>/home/jrusnack/workspace/CustomMatrix/work/jobs/hgf/workspace/asd/b/fgh/c</workspace>
+  <hudsonVersion>1.399</hudsonVersion>
+  <scm class="hudson.scm.NullChangeLogParser"/>
+  <culprits/>
+</matrix-run>
