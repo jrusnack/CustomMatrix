@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import net.sf.json.JSONException;
@@ -107,9 +108,12 @@ public class CustomMatrixAction implements Action {
 
 	
         /* UUID */
-        String uuid = project.getDisplayName() + "_" + build.getNumber() + "_"
+        String uuid= project.getDisplayName() + "_" + (project.getLastBuild().number+1) + "_"
+             + System.currentTimeMillis();
+        if(build!=null){
+            uuid = project.getDisplayName() + "_" + build.getNumber() + "_"
                 + System.currentTimeMillis();
-	
+        }
         BuildState bs = CustomMatrixState.getInstance().getBuildState(uuid);
 
         logger.fine("UUID given: " + uuid);
@@ -198,6 +202,8 @@ public class CustomMatrixAction implements Action {
             build = mbuild;
         } else if (req.findAncestor(MatrixProject.class) != null) {
             type = BuildType.MATRIXPROJECT;
+       //     MatrixProject pr =(MatrixProject) req.findAncestor(MatrixProject.class).getObject();
+            
         } else {
             type = BuildType.UNKNOWN;
         }
