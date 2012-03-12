@@ -1,0 +1,100 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.jenkins-ci.plugins</groupId>
+		<artifactId>plugin</artifactId>
+		<version>1.418</version><!-- which version of Jenkins is this plugin built 
+			against? -->
+	</parent>
+
+	<groupId>net.praqma</groupId>
+	<artifactId>custom-matrix</artifactId>
+	<version>1.0.3-SNAPSHOT</version>
+	<name>Custom Matrix Plugin</name>
+	<description>The Matrix Reloaded plugin. Used for rebuilding a subset of a matrix' configurations, reusing the rest.</description>
+	<packaging>hpi</packaging>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>m.g.o-public</id>
+			<url>http://maven.glassfish.org/content/groups/public/</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>m.g.o-public</id>
+			<url>http://maven.glassfish.org/content/groups/public/</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<licenses>
+		<license>
+			<name>MIT</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+		</license>
+	</licenses>
+
+	<profiles>
+		<profile>
+			<id>cobertura</id>
+			<activation>
+				<property>
+					<!-- Hudson by default defines a property BUILD_NUMBER which is used 
+						to enable the profile. -->
+					<name>BUILD_NUMBER</name>
+				</property>
+			</activation>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>cobertura-maven-plugin</artifactId>
+						<version>2.4</version>
+						<configuration>
+							<formats>
+								<format>html</format>
+								<format>xml</format>
+							</formats>
+						</configuration>
+						<executions>
+							<execution>
+								<id>do-coverage</id>
+								<phase>package</phase>
+								<goals>
+									<goal>cobertura</goal>
+								</goals>
+								<!-- <inherited>false</inherited> <configuration> </configuration> -->
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	
+    <developers>
+        <developer>
+            <id>wolfgarnet</id>
+            <name>Christian Wolfgang</name>
+            <email>coolers@praqma.net</email>
+            <organization>Praqma A/S</organization>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+    
+	<scm>
+		<connection>scm:git:ssh://github.com/Praqma/Matrix-Reloaded-Plugin.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/Praqma/Matrix-Reloaded-Plugin.git</developerConnection>
+		<url>https://github.com/Praqma/Matrix-Reloaded-Plugin.git</url>
+	</scm>
+	
+</project>

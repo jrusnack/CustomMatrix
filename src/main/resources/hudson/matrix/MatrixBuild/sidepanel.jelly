@@ -1,0 +1,13 @@
+ 
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+  <l:header />
+  <l:side-panel>
+    <l:tasks>
+      <st:include page="tasks.jelly"/>
+      <st:include page="actions.jelly" />
+      <!-- <l:task icon="images/24x24/next.png" href="snade" title="${%just a test}" /> -->
+    </l:tasks>
+  </l:side-panel>
+</j:jelly>
+ 
