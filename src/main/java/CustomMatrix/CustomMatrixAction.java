@@ -108,7 +108,7 @@ public class CustomMatrixAction implements Action {
 
 	
         /* UUID */
-        String uuid= project.getDisplayName() + "_" + (project.getLastBuild().number+1) + "_"
+        String uuid= project.getDisplayName() + "_" + (project.getNextBuildNumber()) + "_"
              + System.currentTimeMillis();
         if(build!=null){
             uuid = project.getDisplayName() + "_" + build.getNumber() + "_"
