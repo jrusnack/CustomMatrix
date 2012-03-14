@@ -66,7 +66,7 @@ public class CustomMatrixListener extends RunListener<Run> {
     }
 
     /**
-     * Add the Matrix Reloaded link to the build context
+     * Add the Custom Matrix link to the build context
      */
     @Override
     public void onCompleted(Run run, TaskListener listener) {

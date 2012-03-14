@@ -22,7 +22,7 @@
  *  THE SOFTWARE.
  */
 
-package net.praqma.jenkins.plugin.reloaded;
+package com.redhat.engineering.jenkins.custom.matrix;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ import org.jvnet.hudson.test.HudsonTestCase;
  * @author wolfgang
  *
  */
-public class MatrixReloadedListenerTest extends HudsonTestCase {
+public class CustomMatrixListenerTest extends HudsonTestCase {
     private AxisList axes = null;
 
     private Combination c = null;

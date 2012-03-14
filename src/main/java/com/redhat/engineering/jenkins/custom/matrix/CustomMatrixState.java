@@ -48,7 +48,7 @@ public class CustomMatrixState {
     }
 
     /**
-     * This is the class holding the information about a Matrix Reloaded state
+     * This is the class holding the information about a Custom Matrix state
      * retrieved from the form submit.
      * 
      * @author wolfgang

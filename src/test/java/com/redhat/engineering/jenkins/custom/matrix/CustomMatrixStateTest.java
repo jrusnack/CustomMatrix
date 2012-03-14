@@ -22,7 +22,7 @@
  *  THE SOFTWARE.
  */
 
-package net.praqma.jenkins.plugin.reloaded;
+package com.redhat.engineering.jenkins.custom.matrix;
 
 import hudson.matrix.Combination;
 import com.redhat.engineering.jenkins.custom.matrix.CustomMatrixState;
@@ -35,7 +35,7 @@ import org.jvnet.hudson.test.HudsonTestCase;
  * @author wolfgang
  *
  */
-public class MatrixReloadedStateTest extends HudsonTestCase {
+public class CustomMatrixStateTest extends HudsonTestCase {
     public void testInstance() {
         CustomMatrixState mrs = CustomMatrixState.getInstance();
 

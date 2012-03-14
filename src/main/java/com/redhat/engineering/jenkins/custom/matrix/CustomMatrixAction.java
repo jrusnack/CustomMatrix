@@ -1,4 +1,4 @@
-/*
+    /*
  *  The MIT License
  *
  *  Copyright 2011 Praqma A/S.
@@ -47,17 +47,10 @@ import hudson.matrix.MatrixConfiguration;
 import hudson.matrix.MatrixRun;
 import hudson.matrix.MatrixBuild;
 import hudson.matrix.MatrixProject;
-import hudson.model.AbstractBuild;
-import hudson.model.Action;
-import hudson.model.Cause;
-import hudson.model.CauseAction;
-import hudson.model.Hudson;
-import hudson.model.ParameterValue;
-import hudson.model.ParametersAction;
-import hudson.model.StringParameterValue;
+import hudson.model.*;
 
 /**
- * The Matrix Reloaded Action class. This enables the plugin to add the link
+ * The Custom Matrix Action class. This enables the plugin to add the link
  * action to the side panel.
  * 
  * @author wolfgang
@@ -70,7 +63,7 @@ public class CustomMatrixAction implements Action {
     private static final Logger logger = Logger.getLogger(CustomMatrixAction.class.getName());
 
     enum BuildType {
-        MATRIXBUILD, MATRIXRUN, UNKNOWN
+        MATRIXBUILD, MATRIXRUN, MATRIXPROJECT, UNKNOWN
     }
 
     public CustomMatrixAction() {
@@ -104,38 +97,70 @@ public class CustomMatrixAction implements Action {
         return this.checked;
     }
 
-    public boolean combinationExists( AbstractBuild<?, ?> build, Combination c )
-    {
-    	MatrixProject mp = null;
-    	
-    	if(build instanceof MatrixBuild) {
-    		mp = (MatrixProject) build.getProject();
-    	} else if(build instanceof MatrixRun) {
-    		mp = ((MatrixRun)build).getParentBuild().getProject();
-    	} else {
-    		Log.warn("Unable to determine matrix project");
-    		return false;
-    	}
-    	
-    	MatrixConfiguration mc = mp.getItem(c);
-    	
-    	/* Verify matrix configuration */
-    	if( mc == null || !mc.isActiveConfiguration() ) {
-    		return false;
-    	}    	
-    	    	
-    	return true;
+    public boolean combinationExists( MatrixProject mp, Combination c ){
+	MatrixConfiguration mc = mp.getItem(c);
+    
+	/* Verify matrix configuration */
+	if( mc == null || !mc.isActiveConfiguration() ) {
+	    return false;
+	}
+
+	return true;
     }
 
-    public void performConfig(AbstractBuild<?, ?> build, Map<String, String[]> formData) {
+    public boolean combinationExists( AbstractBuild<?, ?> build, Combination c )
+    {
+	MatrixProject mp = null;
+
+	if(build instanceof MatrixBuild) {
+	    mp = (MatrixProject) build.getProject();
+	} else if(build instanceof MatrixRun) {
+	    mp  = ((MatrixRun)build).getParentBuild().getProject();
+	} else {
+	    Log.warn("Unable to determine matrix project");
+	    return false;
+	}
+
+	return combinationExists(mp,c);
+    }
+    
+    /**
+     * Adds configuration to the build state of build and schedules new build. 
+     * Behavior depends on context where was Custom Matrix run from:
+     * <ul>
+     * <li>if parameter build is null, then run from project menu context is 
+     * assumed</li> 
+     * <li>if parameter build is not null, then run from build context is assumed
+     * and build parameters are added, parameter project is not required</li> 
+     * </ul>
+     * 
+     * @param project	required if build is null
+     * @param build	required if project is null
+     * @param formData	
+     * 
+     */
+    public void performConfig(AbstractProject<?, ?> project, 
+	    AbstractBuild<?, ?> build, Map<String, String[]> formData) {
+	
+	String uuid;
         List<ParameterValue> values = new ArrayList<ParameterValue>();
 
-        logger.info("[MRP] The MATRIX RELOADED FORM has been submitted");
-        //logger.info("[MRP]" + formData.toString(2));
+        logger.info("[CMP] The Custom Matrix Form has been submitted");
 
-        /* UUID */
-        String uuid = build.getProject().getDisplayName() + "_" + build.getNumber() + "_"
+	if(project == null){
+	    project = build.getProject();
+	}
+	
+        /* UUID */	
+	if(build != null){
+	    uuid = project.getDisplayName() + "_" + build.getNumber() + "_"
                 + System.currentTimeMillis();
+	} else {
+	    uuid = project.getDisplayName() + "_" + project.getNextBuildNumber() + "_"
+                + System.currentTimeMillis();	
+	}
+	
+	
         BuildState bs = CustomMatrixState.getInstance().getBuildState(uuid);
 
         logger.fine("UUID given: " + uuid);
@@ -152,7 +177,7 @@ public class CustomMatrixAction implements Action {
                 String value = formData.get(key)[0];
                 try {
                     bs.rebuildNumber = Integer.parseInt(value);
-                    logger.info("[MRP] Build number is " + bs.rebuildNumber );
+                    logger.info("[CMP] Build number is " + bs.rebuildNumber );
                 } catch (NumberFormatException w) {
                     /*
                      * If we can't parse the integer, the number is zero. This
@@ -170,7 +195,7 @@ public class CustomMatrixAction implements Action {
                 String[] vs = key.split(Definitions.__DELIMITER, 2);
                 try {
                     if (vs.length > 1) {
-                    	logger.info("[MRP] adding " + key );
+                    	logger.info("[CMP] adding " + key );
                     	bs.addConfiguration(Combination.fromString(vs[1]), true);
                     }
 
@@ -181,26 +206,28 @@ public class CustomMatrixAction implements Action {
 
 
         }
-
-        /* Get the parameters of the build, if any and add them to the build */
-        ParametersAction actions = build.getAction(ParametersAction.class);
-        if (actions != null) {
-            List<ParameterValue> list = actions.getParameters();
-            for (ParameterValue pv : list) {
-                // if( !pv.getName().startsWith( Definitions.prefix ) )
-                if (!pv.getName().equals(Definitions.__UUID)) {
-                    values.add(pv);
-                }
-            }
-        }
-
+	
+	if(build != null){
+	    /* Get the parameters of the build, if any and add them to the build */
+	    ParametersAction actions = build.getAction(ParametersAction.class);
+	    if (actions != null) {
+		List<ParameterValue> list = actions.getParameters();
+		for (ParameterValue pv : list) {
+		    // if( !pv.getName().startsWith( Definitions.prefix ) )
+		    if (!pv.getName().equals(Definitions.__UUID)) {
+			values.add(pv);
+		    }
+		}
+	    }
+	}
+	
         /* Add the UUID to the new build. */
         values.add(new StringParameterValue(Definitions.__UUID, uuid));
 
         /* Schedule the MatrixBuild */
         Hudson.getInstance()
                 .getQueue()
-                .schedule(build.getProject(), 0, new ParametersAction(values),
+                .schedule(project, 0, new ParametersAction(values),
                         new CauseAction(new Cause.UserCause()));
 
     }
@@ -211,17 +238,20 @@ public class CustomMatrixAction implements Action {
         AbstractBuild<?, ?> build = null;
 
         BuildType type;
-
-        if (req.findAncestor(MatrixBuild.class) != null) {
+	if (req.findAncestor(MatrixRun.class) != null) {
+	    type = BuildType.MATRIXRUN;
+	    build = ((MatrixRun)mbuild).getParentBuild();
+	} else if (req.findAncestor(MatrixBuild.class) != null) {
             type = BuildType.MATRIXBUILD;
             build = mbuild;
-        } else if (req.findAncestor(MatrixRun.class) != null) {
-            type = BuildType.MATRIXRUN;
-            build = ((MatrixRun)mbuild).getParentBuild();
+        } else if (req.findAncestor(MatrixProject.class) != null) {
+            type = BuildType.MATRIXPROJECT;
         } else {
             type = BuildType.UNKNOWN;
         }
-
+	
+	AbstractProject project = req.findAncestorObject(AbstractProject.class);
+    
         JSONObject formData = req.getSubmittedForm();
         Map map = req.getParameterMap();
         Set<String> keys = map.keySet();
@@ -233,16 +263,20 @@ public class CustomMatrixAction implements Action {
         	}
         	System.out.println( );
         }
-        performConfig(build, map);
-
+	
+        performConfig(project, build, map);  
+	
+	
         /*
          * Depending on where the form was submitted, the number of levels to
          * direct
          */
         if (type.equals(BuildType.MATRIXRUN)) {
-            rsp.sendRedirect("../../../");
-        } else {
+	    rsp.sendRedirect("../../../");
+	} else if (type.equals(BuildType.MATRIXBUILD)) {
             rsp.sendRedirect("../../");
+        } else {
+            rsp.sendRedirect("../");
         }
     }
 

@@ -1,4 +1,4 @@
-package net.praqma.jenkins.plugin.reloaded;
+package com.redhat.engineering.jenkins.custom.matrix;
 
 import hudson.matrix.Axis;
 import hudson.matrix.AxisList;
@@ -21,7 +21,7 @@ import com.redhat.engineering.jenkins.custom.matrix.CustomMatrixState.BuildState
 import org.junit.BeforeClass;
 import org.jvnet.hudson.test.HudsonTestCase;
 
-public class MatrixReloadedBuildListenerTest extends HudsonTestCase {
+public class CustomMatrixBuildListenerTest extends HudsonTestCase {
     private AxisList axes = null;
 
     private Combination c = null;
@@ -46,7 +46,7 @@ public class MatrixReloadedBuildListenerTest extends HudsonTestCase {
         List<ParameterValue> values = new ArrayList<ParameterValue>();
         /* UUID */
         String uuid = "myuuid";
-        BuildState bs = MatrixReloadedState.getInstance().getBuildState(uuid);
+        BuildState bs = CustomMatrixState.getInstance().getBuildState(uuid);
 
         MatrixBuild mb = mp.scheduleBuild2(0).get();
         MatrixRun mr = mb.getRun(c);

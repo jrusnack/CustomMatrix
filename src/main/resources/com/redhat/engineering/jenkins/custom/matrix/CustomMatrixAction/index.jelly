@@ -38,9 +38,9 @@
 function click2Change( status )
 {
 	var i;
-	for( i = 0, len = document.matrixreloaded.elements.length ; i < len ; i++ )
+	for( i = 0, len = document.custommatrix.elements.length ; i < len ; i++ )
 	{
-		var element = document.matrixreloaded.elements[i];
+		var element = document.custommatrix.elements[i];
 		if( element.type == 'checkbox' )
 		{
 			if( element.value == status || status > 999 )
@@ -61,13 +61,21 @@ function click2Change( status )
 
 
 			<j:invokeStatic var="currentThread" className="java.lang.Thread"
-				method="currentThread" />
+			    method="currentThread" />
 			<j:invoke var="buildClass" on="${currentThread.contextClassLoader}"
-				method="loadClass">
-				<j:arg value="hudson.model.AbstractBuild" />
+			    method="loadClass">
+			    <j:arg value="hudson.model.AbstractBuild" />
 			</j:invoke>
-
 			<j:set var="build" value="${request.findAncestorObject(buildClass)}" />
+
+			<j:if test="${build == null}">
+			    <j:invoke var="buildClass" on="${currentThread.contextClassLoader}"
+				    method="loadClass">
+				<j:arg value="hudson.model.AbstractProject" />
+			    </j:invoke>
+			    <j:set var="build" value="${request.findAncestorObject(buildClass)}" />
+			    <j:set var="isproject" value="1"/>
+			</j:if>
 			
 	<j:choose>
 		<j:when test="${it.getChecked()==null}">
@@ -81,7 +89,7 @@ function click2Change( status )
 	</j:choose>
 			<div id='matrix'>
 				<j:set var="changed" value="0" />
-				<f:form method="post" action="configSubmit" name="matrixreloaded">
+				<f:form method="post" action="configSubmit" name="custommatrix">
 					<j:set var="prefix" value="${it.getPrefix()}" />
 					<j:choose>
 						<!-- Optimized case when there's only one dimension to the axis (or 

@@ -22,7 +22,7 @@
  *  THE SOFTWARE.
  */
 
-package net.praqma.jenkins.plugin.reloaded;
+package com.redhat.engineering.jenkins.custom.matrix;
 
 import com.redhat.engineering.jenkins.custom.matrix.Definitions;
 import com.redhat.engineering.jenkins.custom.matrix.CustomMatrixEnvironmentContributor;
@@ -55,7 +55,7 @@ import net.sf.json.JSONObject;
 
 import org.jvnet.hudson.test.HudsonTestCase;
 
-public class MatrixReloadedActionTest extends HudsonTestCase {
+public class CustomMatrixActionTest extends HudsonTestCase {
     public void testGetDisplayName() {
         CustomMatrixAction mra = new CustomMatrixAction();
 
@@ -231,7 +231,7 @@ public class MatrixReloadedActionTest extends HudsonTestCase {
         form.put("MRP::", new String[] { "0" });
 
         CustomMatrixAction mra = new CustomMatrixAction();
-        mra.performConfig(mb, form);
+        mra.performConfig(mp, mb, form);
     }
 
     public void testFormNoParms() throws IOException, InterruptedException, ExecutionException {
@@ -254,7 +254,7 @@ public class MatrixReloadedActionTest extends HudsonTestCase {
         //form.element("MRP::dim1=2,dim2=b", false);
 
         CustomMatrixAction mra = new CustomMatrixAction();
-        mra.performConfig(mb, form);
+        mra.performConfig(mp, mb, form);
     }
 
     public void testFormFalseParms() throws IOException, InterruptedException, ExecutionException {
@@ -275,7 +275,7 @@ public class MatrixReloadedActionTest extends HudsonTestCase {
         form.put("MRPFALSE2", new String[] { "1" });
 
         CustomMatrixAction mra = new CustomMatrixAction();
-        mra.performConfig(mb, form);
+        mra.performConfig(mp, mb, form);
     }
 
     public void testFormFalseNumberParm() throws IOException, InterruptedException,
@@ -294,7 +294,7 @@ public class MatrixReloadedActionTest extends HudsonTestCase {
         form.put("MRP::NUMBER", new String[] { "fail" });
 
         CustomMatrixAction mra = new CustomMatrixAction();
-        mra.performConfig(mb, form);
+        mra.performConfig(mp, mb, form);
     }
 
     public void testEnv() throws IOException, InterruptedException, ExecutionException {
