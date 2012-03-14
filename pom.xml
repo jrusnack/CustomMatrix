@@ -7,11 +7,11 @@
 			against? -->
 	</parent>
 
-	<groupId>net.praqma</groupId>
+	<groupId>com.redhat</groupId>
 	<artifactId>custom-matrix</artifactId>
-	<version>1.0.3-SNAPSHOT</version>
+	<version>0.1</version>
 	<name>Custom Matrix Plugin</name>
-	<description>The Matrix Reloaded plugin. Used for rebuilding a subset of a matrix' configurations, reusing the rest.</description>
+	<description>The Custom Matrix plugin. Enhanced Matrix Reloaded plugin - added to project menu.</description>
 	<packaging>hpi</packaging>
 	
 	<properties>
@@ -80,21 +80,21 @@
 	
     <developers>
         <developer>
-            <id>wolfgarnet</id>
-            <name>Christian Wolfgang</name>
-            <email>coolers@praqma.net</email>
-            <organization>Praqma A/S</organization>
+            <id>jrusnack</id>
+            <name>Jan Rusnacko</name>
+            <email>jrusnack@redhat.com</email>
+            <organization>Red Hat, Inc.</organization>
             <roles>
-                <role>developer</role>
+                <role>tester</role>
             </roles>
             <timezone>+1</timezone>
         </developer>
     </developers>
     
 	<scm>
-		<connection>scm:git:ssh://github.com/Praqma/Matrix-Reloaded-Plugin.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com/Praqma/Matrix-Reloaded-Plugin.git</developerConnection>
-		<url>https://github.com/Praqma/Matrix-Reloaded-Plugin.git</url>
+		<connection>scm:git:ssh://github.com/jrusnack/CustomMatrix.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/jrusnack/CustomMatrix.git</developerConnection>
+		<url>https://github.com/jrusnack/CustomMatrix</url>
 	</scm>
 	
 </project>
