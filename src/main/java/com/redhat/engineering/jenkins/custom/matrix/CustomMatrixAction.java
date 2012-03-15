@@ -1,6 +1,7 @@
     /*
  *  The MIT License
  *
+ *  Copyright 2012 Red Hat, Inc.
  *  Copyright 2011 Praqma A/S.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
