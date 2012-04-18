@@ -25,31 +25,20 @@
 
 package com.redhat.engineering.jenkins.custom.matrix;
 
+import hudson.matrix.*;
+import hudson.model.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
-
 import javax.servlet.ServletException;
-
-import com.redhat.engineering.jenkins.custom.matrix.CustomMatrixState.BuildState;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
-
 import org.jfree.util.Log;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
-
-import hudson.matrix.Combination;
-import hudson.matrix.MatrixConfiguration;
-import hudson.matrix.MatrixRun;
-import hudson.matrix.MatrixBuild;
-import hudson.matrix.MatrixProject;
-import hudson.model.*;
-import java.util.*;
 
 /**
  * The Custom Matrix Action class. This enables the plugin to add the link
@@ -58,8 +47,8 @@ import java.util.*;
  * @author wolfgang
  */
 public class CustomMatrixAction implements Action {
-    private AbstractBuild<?, ?> build;
     private String project;
+    private CustomMatrixState state;
 
     private static final Logger logger = Logger.getLogger(CustomMatrixAction.class.getName());
 
@@ -69,12 +58,9 @@ public class CustomMatrixAction implements Action {
 
     public CustomMatrixAction(MatrixProject project) {
 	this.project = project.toString();
-	CustomMatrixState.getInstance().addProject(project.toString(), project.getAxes());
-    }
-    
-    public CustomMatrixAction(String checked){
-	//FIXME: implement
-    }
+	state  = CustomMatrixState.getInstance();
+	state.addProject(project.toString(), project.getAxes());
+    } 
 
 
     public String getDisplayName() {
@@ -87,10 +73,6 @@ public class CustomMatrixAction implements Action {
 
     public String getUrlName() {
         return Definitions.__URL_NAME;
-    }
-
-    public AbstractBuild<?, ?> getBuild() {
-        return build;
     }
 
     public String getPrefix() {
@@ -160,46 +142,21 @@ public class CustomMatrixAction implements Action {
 	}
 	
         /* UUID */	
-	if(build != null){
-	    uuid = project.getDisplayName() + "_" + build.getNumber() + "_"
-                + System.currentTimeMillis();
-	} else {
-	    uuid = project.getDisplayName() + "_" + project.getNextBuildNumber() + "_"
-                + System.currentTimeMillis();	
-	}
+//	if(build != null){
+//	    uuid = project.getDisplayName() + "_" + build.getNumber() + "_"
+//                + System.currentTimeMillis();
+//	} else {
+//	    uuid = project.getDisplayName() + "_" + project.getNextBuildNumber() + "_"
+//                + System.currentTimeMillis();	
+//	}
 	
-	
-        BuildState bs = CustomMatrixState.getInstance().getBuildState(uuid);
-	CustomMatrixState cs = CustomMatrixState.getInstance();
 
-        logger.fine("UUID given: " + uuid);
+//        logger.fine("UUID given: " + uuid);
 
-	
-	cs.setAllCheckedFalse(project.toString());
+	state.setAllCheckedFalse(project.toString());
         /* Generate the parameters */
         Set<String> keys = formData.keySet();
         for( String key : keys ) {
-        	
-            /*
-             * The special form field, providing information about the build we
-             * decent from
-             */
-            if (key.equals(Definitions.__PREFIX + "NUMBER")) {
-                String value = formData.get(key)[0];
-                try {
-                    bs.rebuildNumber = Integer.parseInt(value);
-                    logger.info("[CMP] Build number is " + bs.rebuildNumber );
-                } catch (NumberFormatException w) {
-                    /*
-                     * If we can't parse the integer, the number is zero. This
-                     * will either make the new run fail or rebuild it id
-                     * rebuildIfMissing is set(not set actually)
-                     */
-                    bs.rebuildNumber = 0;
-                }
-                
-                continue;
-            }
         	
             /* Check the fields of the form */
             if (key.startsWith(Definitions.__PREFIX)) {
@@ -207,16 +164,13 @@ public class CustomMatrixAction implements Action {
                 try {
                     if (vs.length > 1) {
                     	logger.info("[CMP] adding " + key );
-                    	bs.addConfiguration(Combination.fromString(vs[1]), true);
-			cs.setCombinationChecked(project.toString(), vs[1], true);
+			state.setCombinationChecked(project.toString(), vs[1], true);
                     }
 
                 } catch (JSONException e) {
                     /* No-op, not the field we were looking for. */
                 }
             }
-
-
         }
 	
 	if(build != null){
@@ -234,7 +188,7 @@ public class CustomMatrixAction implements Action {
 	}
 	
         /* Add the UUID to the new build. */
-        values.add(new StringParameterValue(Definitions.__UUID, uuid));
+        //values.add(new StringParameterValue(Definitions.__UUID, uuid));
 
         /* Schedule the MatrixBuild */
         Hudson.getInstance().getQueue()

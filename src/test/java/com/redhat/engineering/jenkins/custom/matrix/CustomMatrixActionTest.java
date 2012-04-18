@@ -26,7 +26,6 @@
 package com.redhat.engineering.jenkins.custom.matrix;
 
 import com.redhat.engineering.jenkins.custom.matrix.Definitions;
-import com.redhat.engineering.jenkins.custom.matrix.CustomMatrixEnvironmentContributor;
 import hudson.matrix.Axis;
 import hudson.matrix.AxisList;
 import hudson.matrix.Combination;
@@ -57,42 +56,36 @@ import net.sf.json.JSONObject;
 import org.jvnet.hudson.test.HudsonTestCase;
 
 public class CustomMatrixActionTest extends HudsonTestCase {
-    public void testGetDisplayName() {
-        CustomMatrixAction mra = new CustomMatrixAction("");
+    
+    public void testGetDisplayName()throws IOException {
+	init();
+	MatrixProject mp = createMatrixProject( "test" );
+        CustomMatrixAction mra = new CustomMatrixAction(mp);
 
         assertEquals(mra.getDisplayName(), Definitions.__DISPLAY_NAME);
     }
 
-    public void testGetIconFileName() {
-        CustomMatrixAction mra = new CustomMatrixAction("");
+    public void testGetIconFileName()throws IOException {
+	init();
+	MatrixProject mp = createMatrixProject( "test" );
+        CustomMatrixAction mra = new CustomMatrixAction(mp);
 
         assertEquals(mra.getIconFileName(), Definitions.__ICON_FILE_NAME);
     }
 
-    public void testGetUrlName() {
-        CustomMatrixAction mra = new CustomMatrixAction("");
+    public void testGetUrlName() throws IOException{
+	init();
+	MatrixProject mp = createMatrixProject( "test" );
+        CustomMatrixAction mra = new CustomMatrixAction(mp);
 
         assertEquals(mra.getUrlName(), Definitions.__URL_NAME);
     }
 
-    // public void testGetBuild() throws IOException, InterruptedException,
-    // ExecutionException
-    // {
-    // /* Create a previous build */
-    // init();
-    //
-    // MatrixProject mp = createMatrixProject( "test" );
-    // mp.setAxes( axes );
-    //
-    // MatrixBuild mb = mp.scheduleBuild2( 0 ).get();
-    //
-    // CustomMatrixAction action = mb.getAction( CustomMatrixAction.class );
-    // assertNotNull( action );
-    // assertTrue( action.getBuild() instanceof AbstractBuild<?, ?> );
-    // }
 
-    public void testPrefix() {
-        CustomMatrixAction mra = new CustomMatrixAction("");
+    public void testPrefix() throws IOException {
+        init();
+	MatrixProject mp = createMatrixProject( "test" );
+        CustomMatrixAction mra = new CustomMatrixAction(mp);
 
         assertEquals(mra.getPrefix(), Definitions.__PREFIX);
     }
@@ -121,7 +114,7 @@ public class CustomMatrixActionTest extends HudsonTestCase {
 
         MatrixBuild mb = mp.scheduleBuild2(0, new Cause.UserCause(), new ParametersAction(values)).get();
         
-        CustomMatrixAction mra = new CustomMatrixAction("");
+        CustomMatrixAction mra = new CustomMatrixAction(mp);
         
         assertTrue( mra.combinationExists(mb, c_good) );
     }
@@ -145,24 +138,11 @@ public class CustomMatrixActionTest extends HudsonTestCase {
 
         MatrixBuild mb = mp.scheduleBuild2(0, new Cause.UserCause(), new ParametersAction(values)).get();
         
-        CustomMatrixAction mra = new CustomMatrixAction("");
+        CustomMatrixAction mra = new CustomMatrixAction(mp);
         
         assertFalse( mra.combinationExists(mb, c_bad) );
     }    
     
-
-    
-    public void testCombinationExists3() throws InterruptedException, ExecutionException, IOException {
-        init();
-
-        FreeStyleProject mp = createFreeStyleProject("test");
-
-        FreeStyleBuild mb = mp.scheduleBuild2(0, new Cause.UserCause(), new ParametersAction()).get();
-        
-        CustomMatrixAction mra = new CustomMatrixAction("");
-        
-        assertFalse( mra.combinationExists(mb, c_good) );
-    }
 
     private AxisList axes = null;
 
@@ -215,7 +195,7 @@ public class CustomMatrixActionTest extends HudsonTestCase {
         //form.put("MRP::dim1=2,dim2=b", false);
         form.put("MRP::", new String[] { "0" });
 
-        CustomMatrixAction mra = new CustomMatrixAction("");
+        CustomMatrixAction mra = new CustomMatrixAction(mp);
         mra.performConfig(mp, mb, form);
     }
 
@@ -238,7 +218,7 @@ public class CustomMatrixActionTest extends HudsonTestCase {
         form.put("MRP::dim1=2,dim2=a", new String[] { "0" });
         //form.element("MRP::dim1=2,dim2=b", false);
 
-        CustomMatrixAction mra = new CustomMatrixAction("");
+        CustomMatrixAction mra = new CustomMatrixAction(mp);
         mra.performConfig(mp, mb, form);
     }
 
@@ -259,7 +239,7 @@ public class CustomMatrixActionTest extends HudsonTestCase {
         form.put("MRPFALSE1", new String[] { "0" });
         form.put("MRPFALSE2", new String[] { "1" });
 
-        CustomMatrixAction mra = new CustomMatrixAction("");
+        CustomMatrixAction mra = new CustomMatrixAction(mp);
         mra.performConfig(mp, mb, form);
     }
 
@@ -278,21 +258,21 @@ public class CustomMatrixActionTest extends HudsonTestCase {
 
         form.put("MRP::NUMBER", new String[] { "fail" });
 
-        CustomMatrixAction mra = new CustomMatrixAction("");
+        CustomMatrixAction mra = new CustomMatrixAction(mp);
         mra.performConfig(mp, mb, form);
     }
 
-    public void testEnv() throws IOException, InterruptedException, ExecutionException {
-        /* Create a previous build */
-        init();
-
-        MatrixProject mp = createMatrixProject("test");
-        mp.setAxes(axes);
-
-        MatrixBuild mb = mp.scheduleBuild2(0).get();
-
-        CustomMatrixEnvironmentContributor mrec = new CustomMatrixEnvironmentContributor();
-        mrec.buildEnvironmentFor(mb, mb.getEnvironment(null), null);
-    }
+//    public void testEnv() throws IOException, InterruptedException, ExecutionException {
+//        /* Create a previous build */
+//        init();
+//
+//        MatrixProject mp = createMatrixProject("test");
+//        mp.setAxes(axes);
+//
+//        MatrixBuild mb = mp.scheduleBuild2(0).get();
+//
+//        CustomMatrixEnvironmentContributor mrec = new CustomMatrixEnvironmentContributor();
+//        mrec.buildEnvironmentFor(mb, mb.getEnvironment(null), null);
+//    }
 
 }

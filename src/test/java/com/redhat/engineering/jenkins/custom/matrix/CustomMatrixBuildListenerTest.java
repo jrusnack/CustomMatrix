@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import com.redhat.engineering.jenkins.custom.matrix.CustomMatrixState.BuildState;
 
 import org.junit.BeforeClass;
 import org.jvnet.hudson.test.HudsonTestCase;
@@ -71,7 +70,7 @@ public class CustomMatrixBuildListenerTest extends HudsonTestCase {
         List<ParameterValue> values = new ArrayList<ParameterValue>();
         /* UUID */
         String uuid = "myuuid";
-        BuildState bs = CustomMatrixState.getInstance().getBuildState(uuid);
+        //BuildState bs = CustomMatrixState.getInstance().getBuildState(uuid);
 
         MatrixBuild mb = mp.scheduleBuild2(0).get();
         MatrixRun mr = mb.getRun(c);

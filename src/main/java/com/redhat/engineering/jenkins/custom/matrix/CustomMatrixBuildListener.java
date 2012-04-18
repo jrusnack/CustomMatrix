@@ -25,29 +25,17 @@
 
 package com.redhat.engineering.jenkins.custom.matrix;
 
-import java.util.logging.Logger;
 
-import com.redhat.engineering.jenkins.custom.matrix.CustomMatrixState.BuildState;
 
 import hudson.Extension;
-import hudson.matrix.MatrixConfiguration;
 import hudson.matrix.MatrixBuild;
+import hudson.matrix.MatrixConfiguration;
 import hudson.matrix.listeners.MatrixBuildListener;
 
 @Extension
 public class CustomMatrixBuildListener extends MatrixBuildListener{
 	
-	private static Logger logger = Logger.getLogger(CustomMatrixBuildListener.class.getName());
-	
 	public boolean doBuildConfiguration(MatrixBuild b, MatrixConfiguration c) {
-        BuildState bs = Util.getBuildStateFromRun(b);
-        if( bs == null ) {
-        	logger.severe("I didn't get");
-        	return true;
-        }
-        
-        logger.severe("I got " + bs);
-        
-        return bs.getConfiguration(c.getCombination());
+	    return CustomMatrixState.getInstance().isCombinationChecked(b.getParent().toString(), c.getCombination().toString());
 	}
 }

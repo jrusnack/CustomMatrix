@@ -25,14 +25,11 @@
 
 package com.redhat.engineering.jenkins.custom.matrix;
 
-import com.redhat.engineering.jenkins.custom.matrix.CustomMatrixState.BuildState;
 
 import hudson.Extension;
-import hudson.matrix.MatrixRun;
 import hudson.matrix.MatrixBuild;
-import hudson.model.AbstractBuild;
-import hudson.model.TaskListener;
 import hudson.model.Run;
+import hudson.model.TaskListener;
 import hudson.model.listeners.RunListener;
 
 /**
@@ -50,21 +47,6 @@ public class CustomMatrixListener extends RunListener<Run> {
         super(Run.class);
     }
 
-    @Override
-    public void onStarted(Run run, TaskListener listener) {
-        if (run instanceof MatrixBuild) {
-            /**/
-            BuildState bs = Util.getBuildStateFromRun(run);
-            if( bs == null ) {
-            	return;
-            }
-            
-            MatrixBuild mb = (MatrixBuild)run;
-            MatrixBuild base = mb.getProject().getBuildByNumber(bs.rebuildNumber);
-            
-            ((MatrixBuild)run).setBaseBuild(base);
-        }
-    }
 
     /**
      * Add the Custom Matrix link to the build context
@@ -79,13 +61,6 @@ public class CustomMatrixListener extends RunListener<Run> {
             build.getActions().add(action);
         }
 
-        /* Test for MatrixRun and add to context */
-        if (run instanceof MatrixRun) {
-            AbstractBuild<?, ?> build = (AbstractBuild<?, ?>)run;
-
-            CustomMatrixAction action = new CustomMatrixAction(((MatrixRun)run).getParent().getCombination().toString());
-            build.getActions().add(action);
-        }
     }
 
 }

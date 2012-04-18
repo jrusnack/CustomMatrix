@@ -152,7 +152,6 @@ function click2Change( status )
 							</table>
 						</j:otherwise>
 					</j:choose>
-					<input type="hidden" name="${it.getPrefix()}NUMBER" value="${build.number}" />
 					<br />
 					
 					<j:if test="${changed==1}">
