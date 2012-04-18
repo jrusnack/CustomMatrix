@@ -58,19 +58,19 @@ import org.jvnet.hudson.test.HudsonTestCase;
 
 public class CustomMatrixActionTest extends HudsonTestCase {
     public void testGetDisplayName() {
-        CustomMatrixAction mra = new CustomMatrixAction();
+        CustomMatrixAction mra = new CustomMatrixAction("");
 
         assertEquals(mra.getDisplayName(), Definitions.__DISPLAY_NAME);
     }
 
     public void testGetIconFileName() {
-        CustomMatrixAction mra = new CustomMatrixAction();
+        CustomMatrixAction mra = new CustomMatrixAction("");
 
         assertEquals(mra.getIconFileName(), Definitions.__ICON_FILE_NAME);
     }
 
     public void testGetUrlName() {
-        CustomMatrixAction mra = new CustomMatrixAction();
+        CustomMatrixAction mra = new CustomMatrixAction("");
 
         assertEquals(mra.getUrlName(), Definitions.__URL_NAME);
     }
@@ -92,31 +92,15 @@ public class CustomMatrixActionTest extends HudsonTestCase {
     // }
 
     public void testPrefix() {
-        CustomMatrixAction mra = new CustomMatrixAction();
+        CustomMatrixAction mra = new CustomMatrixAction("");
 
         assertEquals(mra.getPrefix(), Definitions.__PREFIX);
     }
 
-    public void testGetChecked1() {
-        CustomMatrixAction mra = new CustomMatrixAction();
-
-        assertNull(mra.getChecked());
-    }
-
-    public void testGetChecked2() {
-        CustomMatrixAction mra = new CustomMatrixAction("test");
-
-        assertNotNull(mra.getChecked());
-        assertEquals(mra.getChecked(), "test");
-    }
 
     public void testBuildType() {
         BuildType bt = BuildType.MATRIXBUILD;
     }
-    
-    
-   
-    
     
     public void testCombinationExists() throws InterruptedException, ExecutionException, IOException {
         init();
@@ -137,7 +121,7 @@ public class CustomMatrixActionTest extends HudsonTestCase {
 
         MatrixBuild mb = mp.scheduleBuild2(0, new Cause.UserCause(), new ParametersAction(values)).get();
         
-        CustomMatrixAction mra = new CustomMatrixAction();
+        CustomMatrixAction mra = new CustomMatrixAction("");
         
         assertTrue( mra.combinationExists(mb, c_good) );
     }
@@ -161,7 +145,7 @@ public class CustomMatrixActionTest extends HudsonTestCase {
 
         MatrixBuild mb = mp.scheduleBuild2(0, new Cause.UserCause(), new ParametersAction(values)).get();
         
-        CustomMatrixAction mra = new CustomMatrixAction();
+        CustomMatrixAction mra = new CustomMatrixAction("");
         
         assertFalse( mra.combinationExists(mb, c_bad) );
     }    
@@ -175,7 +159,7 @@ public class CustomMatrixActionTest extends HudsonTestCase {
 
         FreeStyleBuild mb = mp.scheduleBuild2(0, new Cause.UserCause(), new ParametersAction()).get();
         
-        CustomMatrixAction mra = new CustomMatrixAction();
+        CustomMatrixAction mra = new CustomMatrixAction("");
         
         assertFalse( mra.combinationExists(mb, c_good) );
     }
@@ -231,7 +215,7 @@ public class CustomMatrixActionTest extends HudsonTestCase {
         //form.put("MRP::dim1=2,dim2=b", false);
         form.put("MRP::", new String[] { "0" });
 
-        CustomMatrixAction mra = new CustomMatrixAction();
+        CustomMatrixAction mra = new CustomMatrixAction("");
         mra.performConfig(mp, mb, form);
     }
 
@@ -254,7 +238,7 @@ public class CustomMatrixActionTest extends HudsonTestCase {
         form.put("MRP::dim1=2,dim2=a", new String[] { "0" });
         //form.element("MRP::dim1=2,dim2=b", false);
 
-        CustomMatrixAction mra = new CustomMatrixAction();
+        CustomMatrixAction mra = new CustomMatrixAction("");
         mra.performConfig(mp, mb, form);
     }
 
@@ -275,7 +259,7 @@ public class CustomMatrixActionTest extends HudsonTestCase {
         form.put("MRPFALSE1", new String[] { "0" });
         form.put("MRPFALSE2", new String[] { "1" });
 
-        CustomMatrixAction mra = new CustomMatrixAction();
+        CustomMatrixAction mra = new CustomMatrixAction("");
         mra.performConfig(mp, mb, form);
     }
 
@@ -294,7 +278,7 @@ public class CustomMatrixActionTest extends HudsonTestCase {
 
         form.put("MRP::NUMBER", new String[] { "fail" });
 
-        CustomMatrixAction mra = new CustomMatrixAction();
+        CustomMatrixAction mra = new CustomMatrixAction("");
         mra.performConfig(mp, mb, form);
     }
 

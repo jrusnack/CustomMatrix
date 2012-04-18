@@ -1,4 +1,4 @@
-    /*
+/*
  *  The MIT License
  *
  *  Copyright 2012 Red Hat, Inc.
@@ -49,6 +49,7 @@ import hudson.matrix.MatrixRun;
 import hudson.matrix.MatrixBuild;
 import hudson.matrix.MatrixProject;
 import hudson.model.*;
+import java.util.*;
 
 /**
  * The Custom Matrix Action class. This enables the plugin to add the link
@@ -58,8 +59,7 @@ import hudson.model.*;
  */
 public class CustomMatrixAction implements Action {
     private AbstractBuild<?, ?> build;
-
-    private String checked = null;
+    private String project;
 
     private static final Logger logger = Logger.getLogger(CustomMatrixAction.class.getName());
 
@@ -67,12 +67,15 @@ public class CustomMatrixAction implements Action {
         MATRIXBUILD, MATRIXRUN, MATRIXPROJECT, UNKNOWN
     }
 
-    public CustomMatrixAction() {
+    public CustomMatrixAction(MatrixProject project) {
+	this.project = project.toString();
+	CustomMatrixState.getInstance().addProject(project.toString(), project.getAxes());
+    }
+    
+    public CustomMatrixAction(String checked){
+	//FIXME: implement
     }
 
-    public CustomMatrixAction(String checked) {
-        this.checked = checked;
-    }
 
     public String getDisplayName() {
         return Definitions.__DISPLAY_NAME;
@@ -94,8 +97,12 @@ public class CustomMatrixAction implements Action {
         return Definitions.__PREFIX;
     }
 
-    public String getChecked() {
-        return this.checked;
+    public boolean isCombinationChecked(Combination c){
+	return CustomMatrixState.getInstance().isCombinationChecked(project, c.toString());
+    }
+    
+    private void setAllCheckedFalse(){
+	CustomMatrixState.getInstance().setAllCheckedFalse(project);
     }
 
     public boolean combinationExists( MatrixProject mp, Combination c ){
@@ -163,9 +170,12 @@ public class CustomMatrixAction implements Action {
 	
 	
         BuildState bs = CustomMatrixState.getInstance().getBuildState(uuid);
+	CustomMatrixState cs = CustomMatrixState.getInstance();
 
         logger.fine("UUID given: " + uuid);
 
+	
+	cs.setAllCheckedFalse(project.toString());
         /* Generate the parameters */
         Set<String> keys = formData.keySet();
         for( String key : keys ) {
@@ -198,6 +208,7 @@ public class CustomMatrixAction implements Action {
                     if (vs.length > 1) {
                     	logger.info("[CMP] adding " + key );
                     	bs.addConfiguration(Combination.fromString(vs[1]), true);
+			cs.setCombinationChecked(project.toString(), vs[1], true);
                     }
 
                 } catch (JSONException e) {
@@ -226,8 +237,7 @@ public class CustomMatrixAction implements Action {
         values.add(new StringParameterValue(Definitions.__UUID, uuid));
 
         /* Schedule the MatrixBuild */
-        Hudson.getInstance()
-                .getQueue()
+        Hudson.getInstance().getQueue()
                 .schedule(project, 0, new ParametersAction(values),
                         new CauseAction(new Cause.UserCause()));
 

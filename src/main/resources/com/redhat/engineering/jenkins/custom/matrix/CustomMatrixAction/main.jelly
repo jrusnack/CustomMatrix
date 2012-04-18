@@ -43,11 +43,11 @@
 		</j:otherwise>
 	</j:choose>
 	<j:choose>
-		<j:when test="${(b.getResult().ordinal==0 and defaultChecked.length()==0) or (!defaultChecked.equals(p.combination.toString()) and defaultChecked.length()>0)}">
-			<f:checkbox name="${prefix}${p.combination.toString()}" checked="false" value="${b.getResult().ordinal}" />
+		<j:when test="${it.isCombinationChecked(p.combination)}">
+			<f:checkbox name="${prefix}${p.combination.toString()}" checked="true" value="${b.getResult().ordinal}" />
 		</j:when>
 		<j:otherwise>
-			<f:checkbox name="${prefix}${p.combination.toString()}" checked="true" value="${b.getResult().ordinal}" />
+			<f:checkbox name="${prefix}${p.combination.toString()}" checked="false" value="${b.getResult().ordinal}" />
 		</j:otherwise>
 	</j:choose>
 </j:jelly>

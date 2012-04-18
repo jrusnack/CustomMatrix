@@ -46,12 +46,12 @@ public class CustomMatrixActionFactory extends TransientProjectActionFactory{
     @Override
     public Collection<? extends Action> createFor(AbstractProject ap) {
         ArrayList<Action> actions = new ArrayList<Action>();
-        CustomMatrixAction newAction = new CustomMatrixAction();
 
 	/**
 	* Test if project is matrix project
 	*/
         if(ap instanceof MatrixProject){
+	    CustomMatrixAction newAction = new CustomMatrixAction((MatrixProject)ap);
 	    actions.add(newAction);
 	}
         return actions;

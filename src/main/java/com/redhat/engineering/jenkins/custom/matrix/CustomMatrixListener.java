@@ -73,9 +73,9 @@ public class CustomMatrixListener extends RunListener<Run> {
     public void onCompleted(Run run, TaskListener listener) {
         /* Test for MatrixBuild and add to context */
         if (run instanceof MatrixBuild) {
-            AbstractBuild<?, ?> build = (AbstractBuild<?, ?>)run;
+            MatrixBuild build = (MatrixBuild)run;
 
-            CustomMatrixAction action = new CustomMatrixAction();
+            CustomMatrixAction action = new CustomMatrixAction(build.getParent());
             build.getActions().add(action);
         }
 
