@@ -79,7 +79,7 @@ public class CustomMatrixAction implements Action {
     }
 
     public boolean isCombinationChecked(Combination c){
-	return CustomMatrixState.getInstance().isCombinationChecked(project.toString(), c.toString());
+	return CustomMatrixState.getInstance().isCombinationChecked(project.toString(), c);
     }
     
     private void setAllCheckedFalse(){

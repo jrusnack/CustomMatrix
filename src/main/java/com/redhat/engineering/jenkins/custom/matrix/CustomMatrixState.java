@@ -69,7 +69,7 @@ public class CustomMatrixState {
      * @param combination   
      * @return		    True if should be built, false otherwise
      */
-    public boolean isCombinationChecked(String project, String combination){
+    public boolean isCombinationChecked(String project, Combination combination){
 	if(projectCheckedCombinations.containsKey(project) && projectCheckedCombinations.get(project).containsKey(combination)){
 	    return projectCheckedCombinations.get(project).get(combination);
 	}	    

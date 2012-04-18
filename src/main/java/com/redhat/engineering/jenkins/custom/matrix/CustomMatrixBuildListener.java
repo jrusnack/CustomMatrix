@@ -36,6 +36,6 @@ import hudson.matrix.listeners.MatrixBuildListener;
 public class CustomMatrixBuildListener extends MatrixBuildListener{
 	
 	public boolean doBuildConfiguration(MatrixBuild b, MatrixConfiguration c) {
-	    return CustomMatrixState.getInstance().isCombinationChecked(b.getParent().toString(), c.getCombination().toString());
+	    return CustomMatrixState.getInstance().isCombinationChecked(b.getParent().toString(), c.getCombination());
 	}
 }
