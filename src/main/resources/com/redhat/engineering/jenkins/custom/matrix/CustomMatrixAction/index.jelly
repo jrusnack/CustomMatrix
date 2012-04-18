@@ -90,7 +90,6 @@ function click2Change( status )
 			<div id='matrix'>
 				<j:set var="changed" value="0" />
 				<f:form method="post" action="configSubmit" name="custommatrix">
-					<j:set var="prefix" value="${it.getPrefix()}" />
 					<j:choose>
 						<!-- Optimized case when there's only one dimension to the axis (or 
 							zero dimension) -->

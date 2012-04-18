@@ -30,12 +30,8 @@ import hudson.model.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import net.sf.json.JSONException;
-import net.sf.json.JSONObject;
 import org.jfree.util.Log;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -47,7 +43,7 @@ import org.kohsuke.stapler.StaplerResponse;
  * @author wolfgang
  */
 public class CustomMatrixAction implements Action {
-    private String project;
+    private MatrixProject project;
     private CustomMatrixState state;
 
     private static final Logger logger = Logger.getLogger(CustomMatrixAction.class.getName());
@@ -57,7 +53,10 @@ public class CustomMatrixAction implements Action {
     }
 
     public CustomMatrixAction(MatrixProject project) {
-	this.project = project.toString();
+	if(project == null){
+	    throw new IllegalArgumentException("Project cannot be null");
+	}
+	this.project = project;
 	state  = CustomMatrixState.getInstance();
 	state.addProject(project.toString(), project.getAxes());
     } 
@@ -80,11 +79,11 @@ public class CustomMatrixAction implements Action {
     }
 
     public boolean isCombinationChecked(Combination c){
-	return CustomMatrixState.getInstance().isCombinationChecked(project, c.toString());
+	return CustomMatrixState.getInstance().isCombinationChecked(project.toString(), c.toString());
     }
     
     private void setAllCheckedFalse(){
-	CustomMatrixState.getInstance().setAllCheckedFalse(project);
+	CustomMatrixState.getInstance().setAllCheckedFalse(project.toString());
     }
 
     public boolean combinationExists( MatrixProject mp, Combination c ){
@@ -113,65 +112,35 @@ public class CustomMatrixAction implements Action {
 
 	return combinationExists(mp,c);
     }
-    
-    /**
-     * Adds configuration to the build state of build and schedules new build. 
-     * Behavior depends on context where was Custom Matrix run from:
-     * <ul>
-     * <li>if parameter build is null, then run from project menu context is 
-     * assumed</li> 
-     * <li>if parameter build is not null, then run from build context is assumed
-     * and build parameters are added, parameter project is not required</li> 
-     * </ul>
-     * 
-     * @param project	required if build is null
-     * @param build	required if project is null
-     * @param formData	
-     * 
-     */
-    public void performConfig(AbstractProject<?, ?> project, 
-	    AbstractBuild<?, ?> build, Map<String, String[]> formData) {
+
+    public void doConfigSubmit(StaplerRequest req, StaplerResponse rsp) throws ServletException,
+            IOException, InterruptedException {
+        AbstractBuild<?, ?> build = req.findAncestorObject(AbstractBuild.class);
+
+        BuildType type;
+	if (build != null) {
+            type = BuildType.MATRIXBUILD;
+        } else if (req.findAncestor(MatrixProject.class) != null) {
+            type = BuildType.MATRIXPROJECT;
+        } else {
+            type = BuildType.UNKNOWN;
+        }
 	
-	String uuid;
+	
         List<ParameterValue> values = new ArrayList<ParameterValue>();
 
-        logger.info("[CMP] The Custom Matrix Form has been submitted");
-
-	if(project == null){
-	    project = build.getProject();
-	}
-	
-        /* UUID */	
-//	if(build != null){
-//	    uuid = project.getDisplayName() + "_" + build.getNumber() + "_"
-//                + System.currentTimeMillis();
-//	} else {
-//	    uuid = project.getDisplayName() + "_" + project.getNextBuildNumber() + "_"
-//                + System.currentTimeMillis();	
-//	}
-	
-
-//        logger.fine("UUID given: " + uuid);
-
+	/* Set all combinations to false */
 	state.setAllCheckedFalse(project.toString());
-        /* Generate the parameters */
-        Set<String> keys = formData.keySet();
-        for( String key : keys ) {
-        	
-            /* Check the fields of the form */
-            if (key.startsWith(Definitions.__PREFIX)) {
-                String[] vs = key.split(Definitions.__DELIMITER, 2);
-                try {
-                    if (vs.length > 1) {
-                    	logger.info("[CMP] adding " + key );
-			state.setCombinationChecked(project.toString(), vs[1], true);
-                    }
-
-                } catch (JSONException e) {
-                    /* No-op, not the field we were looking for. */
-                }
-            }
-        }
+	
+        /* Generate the parameters */        
+	String input;
+	for(MatrixConfiguration conf : project.getActiveConfigurations()){
+		Combination cb = conf.getCombination();
+		input = req.getParameter(cb.toString());
+		if(input != null){
+		    state.setCombinationChecked(project.toString(), cb, true);
+		}
+	    }
 	
 	if(build != null){
 	    /* Get the parameters of the build, if any and add them to the build */
@@ -187,58 +156,16 @@ public class CustomMatrixAction implements Action {
 	    }
 	}
 	
-        /* Add the UUID to the new build. */
-        //values.add(new StringParameterValue(Definitions.__UUID, uuid));
-
         /* Schedule the MatrixBuild */
         Hudson.getInstance().getQueue()
                 .schedule(project, 0, new ParametersAction(values),
-                        new CauseAction(new Cause.UserCause()));
-
-    }
-
-    public void doConfigSubmit(StaplerRequest req, StaplerResponse rsp) throws ServletException,
-            IOException, InterruptedException {
-        AbstractBuild<?, ?> mbuild = req.findAncestorObject(AbstractBuild.class);
-        AbstractBuild<?, ?> build = null;
-
-        BuildType type;
-	if (req.findAncestor(MatrixRun.class) != null) {
-	    type = BuildType.MATRIXRUN;
-	    build = ((MatrixRun)mbuild).getParentBuild();
-	} else if (req.findAncestor(MatrixBuild.class) != null) {
-            type = BuildType.MATRIXBUILD;
-            build = mbuild;
-        } else if (req.findAncestor(MatrixProject.class) != null) {
-            type = BuildType.MATRIXPROJECT;
-        } else {
-            type = BuildType.UNKNOWN;
-        }
-	
-	AbstractProject project = req.findAncestorObject(AbstractProject.class);
-    
-        JSONObject formData = req.getSubmittedForm();
-        Map map = req.getParameterMap();
-        Set<String> keys = map.keySet();
-        System.out.println( "VALUES:" );
-        for( String key : keys ) {
-        	System.out.print( key + ": " );
-        	for( String val : req.getParameterValues(key) ) {
-        		System.out.print( val + "; " );
-        	}
-        	System.out.println( );
-        }
-	
-        performConfig(project, build, map);  
-	
+                        new CauseAction(new Cause.UserCause()));  
 	
         /*
          * Depending on where the form was submitted, the number of levels to
          * direct
          */
-        if (type.equals(BuildType.MATRIXRUN)) {
-	    rsp.sendRedirect("../../../");
-	} else if (type.equals(BuildType.MATRIXBUILD)) {
+        if (type.equals(BuildType.MATRIXBUILD)) {
             rsp.sendRedirect("../../");
         } else {
             rsp.sendRedirect("../");

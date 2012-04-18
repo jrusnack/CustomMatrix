@@ -163,105 +163,105 @@ public class CustomMatrixActionTest extends HudsonTestCase {
         r2.put("dim2", "a");
         c_bad = new Combination(r2);
     }
-
-    public void testForm() throws IOException, InterruptedException, ExecutionException {
-        /* Create a previous build */
-        init();
-
-        MatrixProject mp = createMatrixProject("test");
-        mp.setAxes(axes);
-        List<ParameterDefinition> list = new ArrayList<ParameterDefinition>();
-        list.add(new StringParameterDefinition("key", "value"));
-        ParametersDefinitionProperty pdp = new ParametersDefinitionProperty(list);
-        mp.addProperty(pdp);
-
-        /*
-         * Create some parameters to test continuation of parameters from reused
-         * to new build
-         */
-        List<ParameterValue> values = new ArrayList<ParameterValue>();
-        values.add(new StringParameterValue("key", "value"));
-
-        MatrixBuild mb = mp.scheduleBuild2(0, new Cause.UserCause(), new ParametersAction(values)).get();
-
-        /* Create form elements */
-        Map<String, String[]> form = new HashMap<String, String[]>();
-
-        form.put("MRP::NUMBER", new String[] { "1" } );
-
-        //form.put("MRP::dim1=1,dim2=a", false);
-        form.put("MRP::dim1=1,dim2=b", new String[] { "0" });
-        form.put("MRP::dim1=2,dim2=a", new String[] { "0" });
-        //form.put("MRP::dim1=2,dim2=b", false);
-        form.put("MRP::", new String[] { "0" });
-
-        CustomMatrixAction mra = new CustomMatrixAction(mp);
-        mra.performConfig(mp, mb, form);
-    }
-
-    public void testFormNoParms() throws IOException, InterruptedException, ExecutionException {
-        /* Create a previous build */
-        init();
-
-        MatrixProject mp = createMatrixProject("test");
-        mp.setAxes(axes);
-
-        MatrixBuild mb = mp.scheduleBuild2(0).get();
-
-        /* Create form elements */
-        Map<String, String[]> form = new HashMap<String, String[]>();
-
-        form.put("MRP::NUMBER", new String[] { "1" });
-
-        //form.element("MRP::dim1=1,dim2=a", false);
-        form.put("MRP::dim1=1,dim2=b", new String[] { "0" });
-        form.put("MRP::dim1=2,dim2=a", new String[] { "0" });
-        //form.element("MRP::dim1=2,dim2=b", false);
-
-        CustomMatrixAction mra = new CustomMatrixAction(mp);
-        mra.performConfig(mp, mb, form);
-    }
-
-    public void testFormFalseParms() throws IOException, InterruptedException, ExecutionException {
-        /* Create a previous build */
-        init();
-
-        MatrixProject mp = createMatrixProject("test");
-        mp.setAxes(axes);
-
-        MatrixBuild mb = mp.scheduleBuild2(0).get();
-
-        /* Create form elements */
-        Map<String, String[]> form = new HashMap<String, String[]>();
-
-        form.put("MRP::NUMBER", new String[] { "1" });
-
-        form.put("MRPFALSE1", new String[] { "0" });
-        form.put("MRPFALSE2", new String[] { "1" });
-
-        CustomMatrixAction mra = new CustomMatrixAction(mp);
-        mra.performConfig(mp, mb, form);
-    }
-
-    public void testFormFalseNumberParm() throws IOException, InterruptedException,
-            ExecutionException {
-        /* Create a previous build */
-        init();
-
-        MatrixProject mp = createMatrixProject("test");
-        mp.setAxes(axes);
-
-        MatrixBuild mb = mp.scheduleBuild2(0).get();
-
-        /* Create form elements */
-        Map<String, String[]> form = new HashMap<String, String[]>();
-
-        form.put("MRP::NUMBER", new String[] { "fail" });
-
-        CustomMatrixAction mra = new CustomMatrixAction(mp);
-        mra.performConfig(mp, mb, form);
-    }
-
+//
+//    public void testForm() throws IOException, InterruptedException, ExecutionException {
+//        /* Create a previous build */
+//        init();
+//
+//        MatrixProject mp = createMatrixProject("test");
+//        mp.setAxes(axes);
+//        List<ParameterDefinition> list = new ArrayList<ParameterDefinition>();
+//        list.add(new StringParameterDefinition("key", "value"));
+//        ParametersDefinitionProperty pdp = new ParametersDefinitionProperty(list);
+//        mp.addProperty(pdp);
+//
+//        /*
+//         * Create some parameters to test continuation of parameters from reused
+//         * to new build
+//         */
+//        List<ParameterValue> values = new ArrayList<ParameterValue>();
+//        values.add(new StringParameterValue("key", "value"));
+//
+//        MatrixBuild mb = mp.scheduleBuild2(0, new Cause.UserCause(), new ParametersAction(values)).get();
+//
+//        /* Create form elements */
+//        Map<String, String[]> form = new HashMap<String, String[]>();
+//
+//        form.put("MRP::NUMBER", new String[] { "1" } );
+//
+//        //form.put("MRP::dim1=1,dim2=a", false);
+//        form.put("MRP::dim1=1,dim2=b", new String[] { "0" });
+//        form.put("MRP::dim1=2,dim2=a", new String[] { "0" });
+//        //form.put("MRP::dim1=2,dim2=b", false);
+//        form.put("MRP::", new String[] { "0" });
+//
+//        CustomMatrixAction mra = new CustomMatrixAction(mp);
+//        mra.performConfig(mp, mb, form);
+//    }
+//
+//    public void testFormNoParms() throws IOException, InterruptedException, ExecutionException {
+//        /* Create a previous build */
+//        init();
+//
+//        MatrixProject mp = createMatrixProject("test");
+//        mp.setAxes(axes);
+//
+//        MatrixBuild mb = mp.scheduleBuild2(0).get();
+//
+//        /* Create form elements */
+//        Map<String, String[]> form = new HashMap<String, String[]>();
+//
+//        form.put("MRP::NUMBER", new String[] { "1" });
+//
+//        //form.element("MRP::dim1=1,dim2=a", false);
+//        form.put("MRP::dim1=1,dim2=b", new String[] { "0" });
+//        form.put("MRP::dim1=2,dim2=a", new String[] { "0" });
+//        //form.element("MRP::dim1=2,dim2=b", false);
+//
+//        CustomMatrixAction mra = new CustomMatrixAction(mp);
+//        mra.performConfig(mp, mb, form);
+//    }
+//
+//    public void testFormFalseParms() throws IOException, InterruptedException, ExecutionException {
+//        /* Create a previous build */
+//        init();
+//
+//        MatrixProject mp = createMatrixProject("test");
+//        mp.setAxes(axes);
+//
+//        MatrixBuild mb = mp.scheduleBuild2(0).get();
+//
+//        /* Create form elements */
+//        Map<String, String[]> form = new HashMap<String, String[]>();
+//
+//        form.put("MRP::NUMBER", new String[] { "1" });
+//
+//        form.put("MRPFALSE1", new String[] { "0" });
+//        form.put("MRPFALSE2", new String[] { "1" });
+//
+//        CustomMatrixAction mra = new CustomMatrixAction(mp);
+//        mra.performConfig(mp, mb, form);
+//    }
+//
+//    public void testFormFalseNumberParm() throws IOException, InterruptedException,
+//            ExecutionException {
+//        /* Create a previous build */
+//        init();
+//
+//        MatrixProject mp = createMatrixProject("test");
+//        mp.setAxes(axes);
+//
+//        MatrixBuild mb = mp.scheduleBuild2(0).get();
+//
+//        /* Create form elements */
+//        Map<String, String[]> form = new HashMap<String, String[]>();
+//
+//        form.put("MRP::NUMBER", new String[] { "fail" });
+//
+//        CustomMatrixAction mra = new CustomMatrixAction(mp);
+//        mra.performConfig(mp, mb, form);
+//    }
+//
 //    public void testEnv() throws IOException, InterruptedException, ExecutionException {
 //        /* Create a previous build */
 //        init();

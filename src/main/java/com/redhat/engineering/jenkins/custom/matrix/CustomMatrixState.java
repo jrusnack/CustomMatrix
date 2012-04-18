@@ -40,44 +40,91 @@ import java.util.Set;
  * @author wolfgang
  */
 public class CustomMatrixState {
-    // FIXME
-    private Map<String,Map<String,Boolean>> projectCheckedCombinations;
+    
+    /* Stores mapping project -> (combination -> boolean) */
+    private Map<String,Map<Combination,Boolean>> projectCheckedCombinations;
+    
+    /* Stores mapping project -> combinationFilter */
+    private Map<String, String> projectCombinationFilter;
+    
+    private Map<String, AxisList> projectAxisList;
+    
     private static final CustomMatrixState instance = new CustomMatrixState();
 
     private CustomMatrixState() {
-	projectCheckedCombinations = new HashMap<String, Map<String, Boolean>>();
+	projectCheckedCombinations = new HashMap<String, Map<Combination, Boolean>>();
+	projectCombinationFilter = new HashMap<String, String>();
+	projectAxisList = new HashMap<String, AxisList>();
     }
 
     public static CustomMatrixState getInstance() {
         return instance;
     }
 
-    
+    /**
+     * Returns whether to build certain combination of given project or not. If
+     * combination or project was not set prior to the call, returns true.
+     * 
+     * @param project	    
+     * @param combination   
+     * @return		    True if should be built, false otherwise
+     */
     public boolean isCombinationChecked(String project, String combination){
 	if(projectCheckedCombinations.containsKey(project) && projectCheckedCombinations.get(project).containsKey(combination)){
 	    return projectCheckedCombinations.get(project).get(combination);
 	}	    
 	return true;
     }
-    
+
+    /**
+     * Sets all combinations for the project to false (do not build).
+     * 
+     * @param project Project for which to set all combinations to false
+     */
     public void setAllCheckedFalse(String project){
 	if(projectCheckedCombinations.containsKey(project)){
-	    for(String combination : projectCheckedCombinations.get(project).keySet()){
+	    for(Combination combination : projectCheckedCombinations.get(project).keySet()){
 		projectCheckedCombinations.get(project).put(combination, false);
 	    }
 	}
     }
     
-    public void setCombinationChecked(String project, String combination, boolean b){
+    /**
+     * Sets all combinations for the project to true (do build).
+     * 
+     * @param project Project for which to set all combinations to true
+     */
+    public void setAllCheckedTrue(String project){
+	if(projectCheckedCombinations.containsKey(project)){
+	    for(Combination combination : projectCheckedCombinations.get(project).keySet()){
+		projectCheckedCombinations.get(project).put(combination, true);
+	    }
+	}
+    }
+    
+    /**
+     * Set combination for project to be checked/unchecked.
+     * 
+     * @param project
+     * @param combination
+     * @param b		    True if checked (to be built), false otherwise 
+     */
+    public void setCombinationChecked(String project, Combination combination, boolean b){
 	if(projectCheckedCombinations.get(project) != null){
 	    projectCheckedCombinations.get(project).put(combination, b);
 	} else {
-	    Map<String,Boolean> temp = new HashMap<String, Boolean>();
+	    Map<Combination,Boolean> temp = new HashMap<Combination, Boolean>();
 	    projectCheckedCombinations.put(project, temp);
 	    projectCheckedCombinations.get(project).put(combination, b);
 	}
     }
     
+    /**
+     * Returns true if project was already added, false otherwise
+     * 
+     * @param project
+     * @return 
+     */
     public boolean containsProject(String project){
 	if(projectCheckedCombinations.containsKey(project)){
 	    return true;
@@ -85,13 +132,51 @@ public class CustomMatrixState {
 	return false;
     }
     
+    /**
+     * Adds project and sets all combinations to true (build by default).
+     * 
+     * @param project	
+     * @param list	
+     */
     public void addProject(String project, AxisList list){
 	if(!projectCheckedCombinations.containsKey(project)){
-	    Map<String,Boolean> temp = new HashMap<String, Boolean>();
+	    Map<Combination,Boolean> temp = new HashMap<Combination, Boolean>();
 	    projectCheckedCombinations.put(project, temp);
 	    for(Combination c: list.list()){
-		projectCheckedCombinations.get(project).put(c.toString(), true);
+		projectCheckedCombinations.get(project).put(c, true);
 	    }
 	}
     }
+    
+    
+    
+    public void addCombinationFilter(String project, String combinationFilter){
+	projectCombinationFilter.put(project, combinationFilter);
+	rebuildConfiguration(project);
+    }
+    
+    /**
+     * Removes Groovy expression provided for filtering and resets combinations to
+     * false
+     */
+    public void removeCombinationFilter(String project){
+	if(projectCombinationFilter.containsKey(project) &&
+	    projectCombinationFilter.get(project) != null){
+	    projectCombinationFilter.remove(project);
+	}
+	setAllCheckedFalse(project);
+    }
+    
+    //FIXME: test
+    private void rebuildConfiguration(String project){
+	for(Combination combination : projectCheckedCombinations.get(project).keySet()){
+	    if(projectCombinationFilter.get(project) != null && 
+		    combination.evalGroovyExpression(projectAxisList.get(project), projectCombinationFilter.get(project))){
+		projectCheckedCombinations.get(project).put(combination, true);
+	    } else {
+		projectCheckedCombinations.get(project).put(combination, true);
+	    }
+	}
+    } 
+    
 }

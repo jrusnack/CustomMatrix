@@ -44,10 +44,10 @@
 	</j:choose>
 	<j:choose>
 		<j:when test="${it.isCombinationChecked(p.combination)}">
-			<f:checkbox name="${prefix}${p.combination.toString()}" checked="true" value="${b.getResult().ordinal}" />
+			<f:checkbox name="${p.combination.toString()}" checked="true" value="${b.getResult().ordinal}" />
 		</j:when>
 		<j:otherwise>
-			<f:checkbox name="${prefix}${p.combination.toString()}" checked="false" value="${b.getResult().ordinal}" />
+			<f:checkbox name="${p.combination.toString()}" checked="false" value="${b.getResult().ordinal}" />
 		</j:otherwise>
 	</j:choose>
 </j:jelly>
