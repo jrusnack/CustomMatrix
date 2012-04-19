@@ -26,29 +26,106 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
 	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form"
 	xmlns:p="/lib/hudson/project">
-	<j:set var="b" value="${p.run}" />
+    
+    <div>
 	<j:choose>
-		<j:when test="${b==null}">
-			<img src="${imagesURL}/24x24/grey.gif" tooltip="${%Not run}" alt="${%Not run}"
-				height="24" width="24" />
-		</j:when>
-		<j:otherwise>
-			<a href="${p.shortUrl}/">
-				<img src="${imagesURL}/24x24/${b.buildStatusUrl}" tooltip="${p.tooltip}"
-					alt="${p.tooltip}" height="24" width="24" />
-				<j:if test="${empty(o.x) and empty(o.y)}">
-					${p.combination.toString(o.z)}
-            </j:if>
-			</a>
+	    <!-- Optimized case when there's only one dimension to the axis (or 
+		    zero dimension) -->
+	    <j:when test="${empty(o.x) and empty(o.y)}">
+		    <j:forEach var="p" items="${o.rows[0][0]}">
+			    <!-- <d:invokeBody /> -->
+			    <st:include page="main.jelly" />
+			    <st:nbsp />
+			    <j:if test="${!it.combinationExists(build, p.combination)}">
+				    <j:set var="changed" value="1" />
+			    </j:if>
+		    </j:forEach>
+	    </j:when>
+	    <j:otherwise>
+		    <table border="1" class="middle-align center-align">
+			    <!-- X-axis -->
+			    <j:forEach var="x" items="${o.x}" varStatus="loop">
+				    <tr>
+					    <!-- space for Y-axis -->
+					    <j:if test="${!empty(o.y)}">
+						    <td colspan="${size(o.y)}" />
+					    </j:if>
+					    <j:forEach begin="1" end="${o.repeatX(loop.index)}">
+						    <j:forEach var="v" items="${x.values}">
+							    <td colspan="${o.width(loop.index)}">${v}</td>
+						    </j:forEach>
+					    </j:forEach>
+				    </tr>
+			    </j:forEach>
+
+			    <!-- Y-axis -->
+			    <j:forEach var="r" items="${o.rows}">
+				    <tr>
+					    <j:forEach var="y" items="${o.y}" varStatus="loop">
+						    <j:if test="${r.drawYHeader(loop.index)!=null}">
+							    <td rowspan="${o.height(loop.index)}">${r.drawYHeader(loop.index)}</td>
+						    </j:if>
+					    </j:forEach>
+
+					    <j:forEach var="c" items="${r}">
+						    <td>
+							    <j:choose>
+								<j:forEach var="p" items="${c}">
+
+									    <j:set var="b" value="${p.run}" />
+									    <j:choose>
+										    <j:when test="${b==null}">
+											    <img src="${imagesURL}/24x24/grey.gif" tooltip="${%Not run}" alt="${%Not run}"
+												    height="24" width="24" />
+										    </j:when>
+										    <j:otherwise>
+											    <a href="${p.shortUrl}/">
+												    <img src="${imagesURL}/24x24/${b.buildStatusUrl}" tooltip="${p.tooltip}"
+													    alt="${p.tooltip}" height="24" width="24" />
+												    <j:if test="${empty(o.x) and empty(o.y)}">
+													    ${p.combination.toString(o.z)}
+										</j:if>
+											    </a>
+										    </j:otherwise>
+									    </j:choose>
+									    <j:choose>
+										    <j:when test="${it.isCombinationChecked(p.combination)}">
+											    <f:checkbox name="${p.combination.toString()}" checked="true" value="${b.getResult().ordinal}" />
+										    </j:when>
+										    <j:otherwise>
+											    <f:checkbox name="${p.combination.toString()}" checked="false" value="${b.getResult().ordinal}" />
+										    </j:otherwise>
+									    </j:choose>
+									    <j:if test="${!it.combinationExists(build, p.combination)}">
+										    <j:set var="changed" value="1" />
+									    </j:if>
+								    </j:forEach>
+							    </j:choose>
+							</td>
+						</j:forEach>
+					</tr>
+				</j:forEach>
+			</table>
 		</j:otherwise>
 	</j:choose>
-	<j:choose>
-		<j:when test="${it.isCombinationChecked(p.combination)}">
-			<f:checkbox name="${p.combination.toString()}" checked="true" value="${b.getResult().ordinal}" />
-		</j:when>
-		<j:otherwise>
-			<f:checkbox name="${p.combination.toString()}" checked="false" value="${b.getResult().ordinal}" />
-		</j:otherwise>
-	</j:choose>
+
+	<j:if test="${changed==1}">
+		<br />
+		<span style="font-weight:bold;font-size:20px">${%Warning, configuration has changed}</span>
+		<br /><br />
+	</j:if>
+
+	<span style="font-weight:bold">${%Select}: </span> 
+	<a href="#" onclick="click2Change(0);">${%Successful}</a> - 
+	<a href="#" onclick="click2Change(1);">${%Unstable}</a> - 
+	<a href="#" onclick="click2Change(2);">${%Failed}</a> - 
+	<a href="#" onclick="click2Change(1000);">${%All}</a> - 
+	<a href="#" onclick="click2Change(-1);">${%None}</a> 
+
+	<br /><br />
+    </div>
+    
+
+
 </j:jelly>
 

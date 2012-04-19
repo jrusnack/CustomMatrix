@@ -145,6 +145,7 @@ public class CustomMatrixState {
 	    for(Combination c: list.list()){
 		projectCheckedCombinations.get(project).put(c, true);
 	    }
+	    projectAxisList.put(project, list);
 	}
     }
     
@@ -157,7 +158,7 @@ public class CustomMatrixState {
     
     /**
      * Removes Groovy expression provided for filtering and resets combinations to
-     * false
+     * false (as side effect)
      */
     public void removeCombinationFilter(String project){
 	if(projectCombinationFilter.containsKey(project) &&
@@ -174,7 +175,7 @@ public class CustomMatrixState {
 		    combination.evalGroovyExpression(projectAxisList.get(project), projectCombinationFilter.get(project))){
 		projectCheckedCombinations.get(project).put(combination, true);
 	    } else {
-		projectCheckedCombinations.get(project).put(combination, true);
+		projectCheckedCombinations.get(project).put(combination, false);
 	    }
 	}
     } 

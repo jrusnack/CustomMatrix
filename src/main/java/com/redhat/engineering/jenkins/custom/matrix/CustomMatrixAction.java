@@ -45,11 +45,19 @@ import org.kohsuke.stapler.StaplerResponse;
 public class CustomMatrixAction implements Action {
     private MatrixProject project;
     private CustomMatrixState state;
+    
+    // indicates how should configurations be filtered
+    private ConfigurationFilteringMethod confFilteringMethod;
 
     private static final Logger logger = Logger.getLogger(CustomMatrixAction.class.getName());
+    private String combinationFilter;
 
     enum BuildType {
         MATRIXBUILD, MATRIXRUN, MATRIXPROJECT, UNKNOWN
+    }
+    
+    enum ConfigurationFilteringMethod{
+	MATRIX, COMBINATIONFILTER
     }
 
     public CustomMatrixAction(MatrixProject project) {
@@ -59,6 +67,7 @@ public class CustomMatrixAction implements Action {
 	this.project = project;
 	state  = CustomMatrixState.getInstance();
 	state.addProject(project.toString(), project.getAxes());
+	confFilteringMethod = ConfigurationFilteringMethod.MATRIX;
     } 
 
 
@@ -128,19 +137,34 @@ public class CustomMatrixAction implements Action {
 	
 	
         List<ParameterValue> values = new ArrayList<ParameterValue>();
-
-	/* Set all combinations to false */
-	state.setAllCheckedFalse(project.toString());
 	
-        /* Generate the parameters */        
-	String input;
-	for(MatrixConfiguration conf : project.getActiveConfigurations()){
+	/*
+	 * Determine how configurations are filtered 
+	 */
+	confFilteringMethod = ConfigurationFilteringMethod.valueOf(req.getParameter("confFilter"));
+	
+	if(confFilteringMethod == ConfigurationFilteringMethod.COMBINATIONFILTER){
+	    
+	    combinationFilter = req.getParameter("combinationFilter");
+	    state.addCombinationFilter(project.toString(), combinationFilter);
+	    
+	} else {
+	    
+	    /* Remove combination Filter, fields will be checked to false as 
+	     * side effect
+	     */
+	    state.removeCombinationFilter(project.toString());
+
+	    /* Generate the parameters */        
+	    String input;
+	    for(MatrixConfiguration conf : project.getActiveConfigurations()){
 		Combination cb = conf.getCombination();
 		input = req.getParameter(cb.toString());
 		if(input != null){
 		    state.setCombinationChecked(project.toString(), cb, true);
 		}
 	    }
+	}
 	
 	if(build != null){
 	    /* Get the parameters of the build, if any and add them to the build */
@@ -172,4 +196,26 @@ public class CustomMatrixAction implements Action {
         }
     }
 
+    public boolean getMatrixChecked(){
+	if(confFilteringMethod == ConfigurationFilteringMethod.MATRIX){
+	    return true;
+	}
+	return false;
+    }
+    
+    public boolean getCombinationFilterChecked(){
+	if(confFilteringMethod == ConfigurationFilteringMethod.COMBINATIONFILTER){
+	    return true;
+	}
+	return false;
+    }
+    
+    public String getCombinationFilter(){
+	return combinationFilter;
+    }
+    
+    public String getAxes(){
+	return project.getAxes().toString();
+    }
+    
 }
