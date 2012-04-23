@@ -113,7 +113,8 @@
 		<span style="font-weight:bold;font-size:20px">${%Warning, configuration has changed}</span>
 		<br /><br />
 	</j:if>
-
+        
+        <br />
 	<span style="font-weight:bold">${%Select}: </span> 
 	<a href="#" onclick="click2Change(0);">${%Successful}</a> - 
 	<a href="#" onclick="click2Change(1);">${%Unstable}</a> - 

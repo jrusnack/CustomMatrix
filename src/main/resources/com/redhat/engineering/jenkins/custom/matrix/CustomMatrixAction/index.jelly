@@ -85,23 +85,30 @@ function click2Change( status )
 
 			<div>
 				<j:set var="changed" value="0" />
+                                <h2>${%Select configurations}</h2>
 				<f:form method="post" action="configSubmit" name="custommatrix">
 				    <f:entry help="help-combinationFilter">
-					<h2>${%Select configurations}</h2>
-					<f:radio name="confFilter" value="COMBINATIONFILTER" checked="${it.combinationFilterChecked}"/>${%Combination Filter:}
-					    <f:textbox name="combinationFilter" style="width: 400px" value="${it.combinationFilter}" />
-					    <br />
+                                        <table>
+                                            <tr><td>
+                                                <f:radio name="confFilter" value="COMBINATIONFILTER" checked="${it.combinationFilterChecked}"/>${%Combination Filter:}
+                                            </td><td>
+                                                <f:textbox name="combinationFilter" style="width: 400px" value="${it.combinationFilter}" />
+                                            </td></tr>
+                                        </table>					    
 				    </f:entry>
+                                    
 				    <f:entry>
-					<f:radio name="confFilter" value="MATRIX" checked="${it.matrixChecked}"/>${%Configuration matrix:}
-					
-						<!-- <d:invokeBody /> -->
-						<st:include page="main.jelly" />
-					
-					<br />	
+                                        <table>
+                                            <tr><td>
+                                                <f:radio name="confFilter" value="MATRIX" checked="${it.matrixChecked}"/>${%Configuration matrix:}
+                                            </td><td>
+                                                <!-- <d:invokeBody /> -->
+                                                <st:include page="main.jelly" />
+                                            </td></tr>
+					</table>
 					<f:submit value="${%Rebuild Report}" />
 				    </f:entry>			
-					
+                                    
 				</f:form>
 			</div>
 		</l:main-panel>
