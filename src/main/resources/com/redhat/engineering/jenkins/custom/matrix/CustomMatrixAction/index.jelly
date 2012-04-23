@@ -61,7 +61,14 @@ function sel( axis )
                 var element = document.custommatrix.elements[i];
                 if( element.type == 'checkbox' )
                 {
-                        element.checked = true;
+                        if( element.name.indexOf("=" + axis) != -1 )
+			{ 
+				element.checked = true;
+			}
+			else
+			{
+				element.checked = false;
+			}
                 }
         }
         return false;
