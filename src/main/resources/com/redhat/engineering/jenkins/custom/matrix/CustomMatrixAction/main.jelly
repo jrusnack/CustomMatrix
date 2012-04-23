@@ -27,7 +27,6 @@
 	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form"
 	xmlns:p="/lib/hudson/project">
     
-    <div>
 	<j:choose>
 	    <!-- Optimized case when there's only one dimension to the axis (or 
 		    zero dimension) -->
@@ -123,8 +122,6 @@
 	<a href="#" onclick="click2Change(-1);">${%None}</a> 
 
 	<br /><br />
-    </div>
-    
 
 
 </j:jelly>

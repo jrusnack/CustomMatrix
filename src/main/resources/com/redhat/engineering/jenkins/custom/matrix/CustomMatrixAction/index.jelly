@@ -26,12 +26,7 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
 	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 	<l:layout title="Rebuild" norefresh="true">
-		<l:side-panel>
-			<l:tasks>
-				<l:task icon="images/24x24/up.gif" href="${rootURL}/"
-					title="${%Back to Dashboard}" />
-			</l:tasks>
-		</l:side-panel>
+		<st:include it="${it.project}" page="sidepanel.jelly"/>
 		<l:main-panel>
 
 	<script><![CDATA[
@@ -99,10 +94,10 @@ function click2Change( status )
 				    </f:entry>
 				    <f:entry>
 					<f:radio name="confFilter" value="MATRIX" checked="${it.matrixChecked}"/>${%Configuration matrix:}
-					<div id='matrix'>
+					
 						<!-- <d:invokeBody /> -->
 						<st:include page="main.jelly" />
-					</div>
+					
 					<br />	
 					<f:submit value="${%Rebuild Report}" />
 				    </f:entry>			

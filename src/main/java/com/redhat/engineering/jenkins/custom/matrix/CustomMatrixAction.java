@@ -86,6 +86,10 @@ public class CustomMatrixAction implements Action {
     public String getPrefix() {
         return Definitions.__PREFIX;
     }
+    
+    public MatrixProject getProject(){
+        return project;
+    }
 
     public boolean isCombinationChecked(Combination c){
 	return CustomMatrixState.getInstance().isCombinationChecked(project.toString(), c);
