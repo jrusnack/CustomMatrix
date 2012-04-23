@@ -50,10 +50,23 @@ function click2Change( status )
 	}
 	return false;
 }
+]]></script>
 
-
-	]]></script>
-
+	<script><![CDATA[
+function sel( axis )
+{
+        var i;
+        for( i = 0, len = document.custommatrix.elements.length ; i < len ; i++ )
+        {
+                var element = document.custommatrix.elements[i];
+                if( element.type == 'checkbox' )
+                {
+                        element.checked = true;
+                }
+        }
+        return false;
+}
+]]></script>
 
 			<j:invokeStatic var="currentThread" className="java.lang.Thread"
 			    method="currentThread" />

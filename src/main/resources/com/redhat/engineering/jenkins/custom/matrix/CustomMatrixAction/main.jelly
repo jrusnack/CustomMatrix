@@ -51,7 +51,9 @@
 					    </j:if>
 					    <j:forEach begin="1" end="${o.repeatX(loop.index)}">
 						    <j:forEach var="v" items="${x.values}">
-							    <td colspan="${o.width(loop.index)}">${v}</td>
+							    <td colspan="${o.width(loop.index)}">
+                                                                <a href="#" onclick="sel('${v}');">${v}</a>
+                                                            </td>
 						    </j:forEach>
 					    </j:forEach>
 				    </tr>
@@ -62,7 +64,9 @@
 				    <tr>
 					    <j:forEach var="y" items="${o.y}" varStatus="loop">
 						    <j:if test="${r.drawYHeader(loop.index)!=null}">
-							    <td rowspan="${o.height(loop.index)}">${r.drawYHeader(loop.index)}</td>
+							    <td rowspan="${o.height(loop.index)}">
+                                                                <a href="#" onclick="sel('${r.drawYHeader(loop.index)}');">${r.drawYHeader(loop.index)}</a>
+                                                            </td>
 						    </j:if>
 					    </j:forEach>
 
@@ -82,8 +86,8 @@
 												    <img src="${imagesURL}/24x24/${b.buildStatusUrl}" tooltip="${p.tooltip}"
 													    alt="${p.tooltip}" height="24" width="24" />
 												    <j:if test="${empty(o.x) and empty(o.y)}">
-													    ${p.combination.toString(o.z)}
-										</j:if>
+													    <a href="#" onclick="sel('${p.combination.toString(o.z)}');">${p.combination.toString(o.z)}</a>
+                                                                                                    </j:if>
 											    </a>
 										    </j:otherwise>
 									    </j:choose>
