@@ -28,9 +28,11 @@ package com.redhat.engineering.jenkins.custom.matrix;
 
 import hudson.Extension;
 import hudson.matrix.MatrixBuild;
+import hudson.matrix.MatrixProject;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.model.listeners.RunListener;
+import java.util.List;
 
 /**
  * This registers the {@link Action}s to the side panel of the matrix project
@@ -57,8 +59,18 @@ public class CustomMatrixListener extends RunListener<Run> {
         if (run instanceof MatrixBuild) {
             MatrixBuild build = (MatrixBuild)run;
 
-            CustomMatrixAction action = new CustomMatrixAction(build.getParent());
+            /*
+             * check if action was already added to MatrixProject actions
+             */
+            List<CustomMatrixAction> list = build.getParent().getActions(CustomMatrixAction.class);
+            if(list.isEmpty()){
+                MatrixProject mp = build.getParent();
+                mp.getActions().add(new CustomMatrixAction(mp));
+            }
+           
+            CustomMatrixAction action = list.get(0);
             build.getActions().add(action);
+            
         }
 
     }

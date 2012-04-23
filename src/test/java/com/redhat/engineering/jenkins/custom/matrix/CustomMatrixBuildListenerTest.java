@@ -68,9 +68,6 @@ public class CustomMatrixBuildListenerTest extends HudsonTestCase {
         mp.setAxes(axes);
 
         List<ParameterValue> values = new ArrayList<ParameterValue>();
-        /* UUID */
-        String uuid = "myuuid";
-        //BuildState bs = CustomMatrixState.getInstance().getBuildState(uuid);
 
         MatrixBuild mb = mp.scheduleBuild2(0).get();
         MatrixRun mr = mb.getRun(c);

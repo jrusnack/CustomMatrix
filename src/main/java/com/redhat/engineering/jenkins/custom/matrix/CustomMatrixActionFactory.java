@@ -31,6 +31,7 @@ import hudson.model.Action;
 import hudson.model.TransientProjectActionFactory;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -51,8 +52,14 @@ public class CustomMatrixActionFactory extends TransientProjectActionFactory{
 	* Test if project is matrix project
 	*/
         if(ap instanceof MatrixProject){
-	    CustomMatrixAction newAction = new CustomMatrixAction((MatrixProject)ap);
-	    actions.add(newAction);
+            /**
+             * Add Custom MatrixAction if not already added
+             */
+            List<CustomMatrixAction> list = ap.getActions(CustomMatrixAction.class);
+            if(list.isEmpty()){
+                CustomMatrixAction newAction = new CustomMatrixAction((MatrixProject)ap);
+                actions.add(newAction);
+            }
 	}
         return actions;
     }
