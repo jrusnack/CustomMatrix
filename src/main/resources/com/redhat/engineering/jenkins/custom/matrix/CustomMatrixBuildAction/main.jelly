@@ -86,7 +86,7 @@
 												    <img src="${imagesURL}/24x24/${b.buildStatusUrl}" tooltip="${p.tooltip}"
 													    alt="${p.tooltip}" height="24" width="24" />
 												    <j:if test="${empty(o.x) and empty(o.y)}">
-													    <a href="#" onclick="sel('${p.combination.toString(o.z)}');">${p.combination.toString(o.z)}</a>
+													    ${p.combination.toString(o.z)}
                                                                                                     </j:if>
 											    </a>
 										    </j:otherwise>
