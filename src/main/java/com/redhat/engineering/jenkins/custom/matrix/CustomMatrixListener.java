@@ -62,13 +62,13 @@ public class CustomMatrixListener extends RunListener<Run> {
             /*
              * check if action was already added to MatrixProject actions
              */
-            List<CustomMatrixAction> list = build.getParent().getActions(CustomMatrixAction.class);
+            List<CustomMatrixProjectAction> list = build.getParent().getActions(CustomMatrixProjectAction.class);
             if(list.isEmpty()){
                 MatrixProject mp = build.getParent();
-                mp.getActions().add(new CustomMatrixAction(mp));
+                mp.getActions().add(new CustomMatrixProjectAction(mp));
             }
            
-            CustomMatrixAction action = list.get(0);
+            CustomMatrixBuildAction action = new CustomMatrixBuildAction(build, list.get(0));
             build.getActions().add(action);
             
         }

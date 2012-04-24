@@ -49,8 +49,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import com.redhat.engineering.jenkins.custom.matrix.CustomMatrixAction;
-import com.redhat.engineering.jenkins.custom.matrix.CustomMatrixAction.BuildType;
+import com.redhat.engineering.jenkins.custom.matrix.CustomMatrixProjectAction;
+import com.redhat.engineering.jenkins.custom.matrix.CustomMatrixProjectAction.BuildType;
 import net.sf.json.JSONObject;
 
 import org.jvnet.hudson.test.HudsonTestCase;
@@ -60,7 +60,7 @@ public class CustomMatrixActionTest extends HudsonTestCase {
     public void testGetDisplayName()throws IOException {
 	init();
 	MatrixProject mp = createMatrixProject( "test" );
-        CustomMatrixAction mra = new CustomMatrixAction(mp);
+        CustomMatrixProjectAction mra = new CustomMatrixProjectAction(mp);
 
         assertEquals(mra.getDisplayName(), Definitions.__DISPLAY_NAME);
     }
@@ -68,7 +68,7 @@ public class CustomMatrixActionTest extends HudsonTestCase {
     public void testGetIconFileName()throws IOException {
 	init();
 	MatrixProject mp = createMatrixProject( "test" );
-        CustomMatrixAction mra = new CustomMatrixAction(mp);
+        CustomMatrixProjectAction mra = new CustomMatrixProjectAction(mp);
 
         assertEquals(mra.getIconFileName(), Definitions.__ICON_FILE_NAME);
     }
@@ -76,19 +76,11 @@ public class CustomMatrixActionTest extends HudsonTestCase {
     public void testGetUrlName() throws IOException{
 	init();
 	MatrixProject mp = createMatrixProject( "test" );
-        CustomMatrixAction mra = new CustomMatrixAction(mp);
+        CustomMatrixProjectAction mra = new CustomMatrixProjectAction(mp);
 
         assertEquals(mra.getUrlName(), Definitions.__URL_NAME);
     }
 
-
-    public void testPrefix() throws IOException {
-        init();
-	MatrixProject mp = createMatrixProject( "test" );
-        CustomMatrixAction mra = new CustomMatrixAction(mp);
-
-        assertEquals(mra.getPrefix(), Definitions.__PREFIX);
-    }
 
 
     public void testBuildType() {
@@ -114,7 +106,7 @@ public class CustomMatrixActionTest extends HudsonTestCase {
 
         MatrixBuild mb = mp.scheduleBuild2(0, new Cause.UserCause(), new ParametersAction(values)).get();
         
-        CustomMatrixAction mra = new CustomMatrixAction(mp);
+        CustomMatrixProjectAction mra = new CustomMatrixProjectAction(mp);
         
         assertTrue( mra.combinationExists(mb, c_good) );
     }
@@ -138,7 +130,7 @@ public class CustomMatrixActionTest extends HudsonTestCase {
 
         MatrixBuild mb = mp.scheduleBuild2(0, new Cause.UserCause(), new ParametersAction(values)).get();
         
-        CustomMatrixAction mra = new CustomMatrixAction(mp);
+        CustomMatrixProjectAction mra = new CustomMatrixProjectAction(mp);
         
         assertFalse( mra.combinationExists(mb, c_bad) );
     }    

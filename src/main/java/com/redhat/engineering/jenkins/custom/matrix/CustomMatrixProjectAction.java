@@ -42,14 +42,14 @@ import org.kohsuke.stapler.StaplerResponse;
  * 
  * @author wolfgang
  */
-public class CustomMatrixAction implements Action {
+public class CustomMatrixProjectAction implements Action {
     private MatrixProject project;
     private CustomMatrixState state;
     
     // indicates how should configurations be filtered
     private ConfigurationFilteringMethod confFilteringMethod;
 
-    private static final Logger logger = Logger.getLogger(CustomMatrixAction.class.getName());
+    private static final Logger logger = Logger.getLogger(CustomMatrixProjectAction.class.getName());
     private String combinationFilter;
 
     enum BuildType {
@@ -60,7 +60,7 @@ public class CustomMatrixAction implements Action {
 	MATRIX, COMBINATIONFILTER
     }
 
-    public CustomMatrixAction(MatrixProject project) {
+    public CustomMatrixProjectAction(MatrixProject project) {
 	if(project == null){
 	    throw new IllegalArgumentException("Project cannot be null");
 	}
@@ -82,12 +82,8 @@ public class CustomMatrixAction implements Action {
     public String getUrlName() {
         return Definitions.__URL_NAME;
     }
-
-    public String getPrefix() {
-        return Definitions.__PREFIX;
-    }
     
-    public MatrixProject getProject(){
+    public Actionable getPage(){
         return project;
     }
 

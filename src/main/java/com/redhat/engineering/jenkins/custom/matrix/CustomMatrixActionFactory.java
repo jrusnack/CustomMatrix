@@ -52,7 +52,7 @@ public class CustomMatrixActionFactory extends TransientProjectActionFactory{
 	* Test if project is matrix project
 	*/
         if(ap instanceof MatrixProject){
-            CustomMatrixAction newAction = new CustomMatrixAction((MatrixProject)ap);
+            CustomMatrixProjectAction newAction = new CustomMatrixProjectAction((MatrixProject)ap);
             actions.add(newAction);
 	}
         return actions;
