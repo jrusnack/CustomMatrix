@@ -123,7 +123,7 @@ function sel( axis )
                                                 <f:radio name="confFilter" value="MATRIX" checked="${it.matrixChecked}"/>${%Configuration matrix:}
                                             </td><td>
                                                 <!-- <d:invokeBody /> -->
-                                                <st:include page="main.jelly" />
+                                                <st:include page="matrix.jelly" />
                                             </td></tr>
 					</table>
 					<f:submit value="${%Rebuild Report}" />

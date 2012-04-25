@@ -1,0 +1,115 @@
+<!-- 
+   The MIT License
+ 
+   Copyright 2011 Praqma A/S.
+ 
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+ 
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+ 
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+ -->
+
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form"
+	xmlns:p="/lib/hudson/project">
+    
+	<j:choose>
+	    <!-- Optimized case when there's only one dimension to the axis (or 
+		    zero dimension) -->
+	    <j:when test="${empty(o.x) and empty(o.y)}">
+                <table border="1" class="middle-align center-align">
+		    <j:forEach var="p" items="${o.rows[0][0]}">
+			    <!-- <d:invokeBody /> -->
+                            <tr><td>
+                                ${p.combination.toString(o.z)}
+                            </td><td>
+                                <st:include page="main.jelly" />
+                                <j:if test="${!it.combinationExists(build, p.combination)}">
+                                        <j:set var="changed" value="1" />
+                                </j:if>
+                            </td></tr>
+		    </j:forEach>
+                </table>
+	    </j:when>
+	    <j:otherwise>
+		    <table border="1" class="middle-align center-align">
+			    <!-- X-axis -->
+			    <j:forEach var="x" items="${o.x}" varStatus="loop">
+				    <tr>
+					    <!-- space for Y-axis -->
+					    <j:if test="${!empty(o.y)}">
+						    <td colspan="${size(o.y)}" />
+					    </j:if>
+					    <j:forEach begin="1" end="${o.repeatX(loop.index)}">
+						    <j:forEach var="v" items="${x.values}">
+							    <td colspan="${o.width(loop.index)}">
+                                                                <a href="#" onclick="sel('${v}');">${v}</a>
+                                                            </td>
+						    </j:forEach>
+					    </j:forEach>
+				    </tr>
+			    </j:forEach>
+
+			    <!-- Y-axis -->
+			    <j:forEach var="r" items="${o.rows}">
+				    <tr>
+					    <j:forEach var="y" items="${o.y}" varStatus="loop">
+						    <j:if test="${r.drawYHeader(loop.index)!=null}">
+							    <td rowspan="${o.height(loop.index)}">
+                                                                <a href="#" onclick="sel('${r.drawYHeader(loop.index)}');">${r.drawYHeader(loop.index)}</a>
+                                                            </td>
+						    </j:if>
+					    </j:forEach>
+
+					    <j:forEach var="c" items="${r}">
+						    <td>
+							    <j:choose>
+								<j:forEach var="p" items="${c}">
+
+									    <st:include page="main.jelly" />
+									    <j:if test="${!it.combinationExists(build, p.combination)}">
+										    <j:set var="changed" value="1" />
+									    </j:if>
+								    </j:forEach>
+							    </j:choose>
+							</td>
+						</j:forEach>
+					</tr>
+				</j:forEach>
+			</table>
+		</j:otherwise>
+	</j:choose>
+
+	<j:if test="${changed==1}">
+		<br />
+		<span style="font-weight:bold;font-size:20px">${%Warning, configuration has changed}</span>
+		<br /><br />
+	</j:if>
+        
+        <br />
+	<span style="font-weight:bold">${%Select}: </span> 
+	<a href="#" onclick="click2Change(0);">${%Successful}</a> - 
+	<a href="#" onclick="click2Change(1);">${%Unstable}</a> - 
+	<a href="#" onclick="click2Change(2);">${%Failed}</a> - 
+	<a href="#" onclick="click2Change(1000);">${%All}</a> - 
+	<a href="#" onclick="click2Change(-1);">${%None}</a> 
+
+	<br /><br />
+
+
+</j:jelly>
+
