@@ -39,12 +39,12 @@ import org.kohsuke.stapler.StaplerResponse;
  * @author jrusnack
  */
 public class CustomMatrixBuildAction implements Action{
-    private final MatrixBuild build;
-    private final CustomMatrixProjectAction projectAction;
+    private MatrixBuild build;
+    private CustomMatrixProjectAction projectAction;
 
-    public CustomMatrixBuildAction(MatrixBuild build, CustomMatrixProjectAction proejctAction){
+    public CustomMatrixBuildAction(MatrixBuild build, CustomMatrixProjectAction projectAction){
         this.build = build;
-        this.projectAction = proejctAction;
+        this.projectAction = projectAction;
     }
 
     public String getIconFileName() {
@@ -59,10 +59,10 @@ public class CustomMatrixBuildAction implements Action{
         return projectAction.getUrlName();
     }
 
-    public Actionable getPage(){
+    public MatrixBuild getBuild(){
         return build;
     }
-
+    
     public boolean isCombinationChecked(Combination c){
         return projectAction.isCombinationChecked(c);
     }

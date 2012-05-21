@@ -67,7 +67,7 @@ public class CustomMatrixListener extends RunListener<Run> {
                 MatrixProject mp = build.getParent();
                 mp.getActions().add(new CustomMatrixProjectAction(mp));
             }
-           
+            
             CustomMatrixBuildAction action = new CustomMatrixBuildAction(build, list.get(0));
             build.getActions().add(action);
             

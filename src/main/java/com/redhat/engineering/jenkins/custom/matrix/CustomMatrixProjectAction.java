@@ -83,7 +83,7 @@ public class CustomMatrixProjectAction implements Action {
         return Definitions.__URL_NAME;
     }
     
-    public Actionable getPage(){
+    public MatrixProject getProject(){
         return project;
     }
 
