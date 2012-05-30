@@ -26,7 +26,12 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
 	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 	<l:layout title="Rebuild" norefresh="true">
-		<st:include it="${it.build}" page="sidepanel.jelly"/>
+		<l:side-panel>
+			<l:tasks>
+				<l:task icon="images/24x24/up.gif" href="../"
+					title="${%Back to Project}" />
+			</l:tasks>
+		</l:side-panel>
 		<l:main-panel>
                     
                     

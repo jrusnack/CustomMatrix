@@ -96,11 +96,5 @@
 		<developerConnection>scm:git:ssh://git@github.com/jrusnack/CustomMatrix.git</developerConnection>
 		<url>https://github.com/jrusnack/CustomMatrix</url>
 	</scm>
-    <dependencies>
-        <dependency>
-            <groupId>org.jenkins-ci.main</groupId>
-            <artifactId>jenkins-core</artifactId>
-            <version>1.418</version>
-        </dependency>
-    </dependencies>
+    
 </project>
